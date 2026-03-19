@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clone X - {{ title || 'Accueil' }}</title>
+    <link rel="stylesheet" href="/styles.css" /> </head>
+<body>
+    <div class="layout">
+        {{-- SIDEBAR --}}
+        <aside class="sidebar">
+            <div class="brand">X</div>
+            <nav class="nav-menu">
+                <a href="{{ route('home') }}" class="nav-link">Accueil</a>
+                <a href="#" class="nav-link">Grok</a>
+                <a href="#" class="nav-link">Profil</a>
+            </nav>
+            
+            @if(auth.user)
+              <div class="user-chip">
+                <div class="avatar"></div>
+                <div>
+                  <p>{{ auth.user.fullName }}</p>
+                  <p class="muted">{{ auth.user.email }}</p>
+                </div>
+              </div>
+              <form action="{{ route('auth.logout') }}" method="POST">
+                {{ csrfField() }}
+                <button type="submit" class="btn btn-outline">Se déconnecter</button>
+              </form>
+            @endif
+        </aside>
+
+        {{-- CONTENU DYNAMIQUE --}}
+        <section class="feed-panel">
+            {{{ await $slots.main() }}}
+        </section>
+
+        {{-- RIGHT PANEL --}}
+        <aside class="right-panel">
+            <div class="search-box">
+                <input type="text" placeholder="Chercher" />
+            </div>
+            <div class="card"><h3>Ce qui se passe</h3></div>
+        </aside>
+    </div>
+</body>
+</html>

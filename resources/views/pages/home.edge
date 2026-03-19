@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clone X - Capstone 1</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main id="app" class="app-shell"></main>
+
+      <section class="welcome-layout">
+        <div class="welcome-logo-wrap">
+          <div class="x-mark" aria-hidden="true">X</div>
+        </div>
+        <div class="welcome-panel">
+          <h1>Ca se passe maintenant</h1>
+          <h2>Inscrivez-vous.</h2>
+          <button id="open-signup" class="btn btn-primary">Creer un compte</button>
+          <div class="divider"><span>ou</span></div>
+          <p class="helper-text">Vous avez deja un compte ?</p>
+          <button id="open-login" class="btn btn-outline">Se connecter</button>
+        </div>
+      </section>
+  
+    <dialog id="auth-dialog" class="auth-dialog">
+      <form method="dialog" class="auth-card" id="auth-form">
+        <button type="button" class="dialog-close" id="close-auth">x</button>
+        <h2 id="auth-title">Se connecter</h2>
+        <div id="signup-only" class="hidden">
+          <input name="name" placeholder="Nom et prenom" />
+          <input name="username" placeholder="Pseudo" />
+        </div>
+        <input type="email" name="email" placeholder="Email" required />
+        <input type="password" name="password" placeholder="Mot de passe" required />
+        <button type="submit" class="btn btn-primary btn-wide" id="auth-submit">Continuer</button>
+        <p class="muted" id="auth-switch-line"></p>
+      </form>
+    </dialog>
+
+    <script src="app.js" defer></script>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <link rel="stylesheet" href="/styles.css" />
+</head>
+<body class="welcome-layout">
+    <div class="auth-card">
+        <h2>Créer votre compte</h2>
+        <form  method="POST">
+            {{ csrfField() }}
+            
+            <input type="text" name="full_name" placeholder="Nom complet" required />
+            <input type="email" name="email" placeholder="Email" required />
+            <input type="password" name="password" placeholder="Mot de passe" required />
+
+            <button type="submit" class="btn btn-primary btn-wide">S'inscrire</button>
+        </form>
+        <p>Déjà un compte ? <a href="/login">Se connecter</a></p>
+    </div>
+</body>
+</html>
