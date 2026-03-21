@@ -44,6 +44,14 @@
       </form>
     </dialog>
 
+    @if(auth.user)
+     <form action="{{ route('tweets.store') }}" method="POST" class="tweet-box">
+     {{ csrfField() }}
+     <textarea name="content" placeholder="Quoi de neuf ?" required></textarea>
+     <button type="submit">Poster</button>
+     </form>
+    @endif
+
     <script src="app.js" defer></script>
   </body>
 </html>

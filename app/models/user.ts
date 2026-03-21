@@ -2,18 +2,17 @@ import { UserSchema } from '#database/schema'
 import hash from '@adonisjs/core/services/hash'
 import { compose } from '@adonisjs/core/helpers'
 import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
+// app/models/user.ts
+import { hasMany } from '@adonisjs/lucid/orm'
+import type { HasMany } from '@adonisjs/lucid/types/relations'
+import Tweet from '#models/tweet'
 
-/**
- * User model represents a user in the application.
- * It extends UserSchema and includes authentication capabilities
- * through the withAuthFinder mixin.
- */
 export default class User extends compose(UserSchema, withAuthFinder(hash)) {
-  /**
-   * Get the user's initials from their full name or email.
-   * Returns the first letter of first and last name if available,
-   * otherwise returns the first two characters of the email username.
-   */
+  // on définit la relation entre User et Tweet
+  // relation user -> tweets un utilisateur peut avoir plusieurs tweets
+  @hasMany(() => Tweet)
+  declare tweets: HasMany<typeof Tweet>
+
   get initials() {
     const [first, last] = this.fullName ? this.fullName.split(' ') : this.email.split('@')
     if (first && last) {
@@ -21,4 +20,4 @@ export default class User extends compose(UserSchema, withAuthFinder(hash)) {
     }
     return `${first.slice(0, 2)}`.toUpperCase()
   }
-}
+} 
