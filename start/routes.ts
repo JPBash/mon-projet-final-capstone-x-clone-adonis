@@ -23,14 +23,14 @@ router
     // Routes de connexion
     router.get('login', [controllers.Session, 'create']).as('auth.login.show')
     router.post('login', [controllers.Session, 'store']).as('session.store')
-
-    router.get('/profile', [RegisterController, 'showProfile']).as('profile.show')
   })
   .use(middleware.guest())
 
 // 3. Groupe pour les connectés
 router
   .group(() => {
+    router.get('/profile', [RegisterController, 'showProfile']).as('profile.show')
+    router.post('/profile/update', [RegisterController, 'updateProfile']).as('profile.update')
     router.post('logout', [controllers.Session, 'destroy']).as('auth.logout')
 
     // Route pour poster un tweet

@@ -10,6 +10,7 @@ export type ScannedRoutes = {
     'auth.login.show': { paramsTuple?: []; params?: {} }
     'session.store': { paramsTuple?: []; params?: {} }
     'profile.show': { paramsTuple?: []; params?: {} }
+    'profile.update': { paramsTuple?: []; params?: {} }
     'auth.logout': { paramsTuple?: []; params?: {} }
     'tweets.store': { paramsTuple?: []; params?: {} }
   }
@@ -28,6 +29,7 @@ export type ScannedRoutes = {
   POST: {
     'new_account.store': { paramsTuple?: []; params?: {} }
     'session.store': { paramsTuple?: []; params?: {} }
+    'profile.update': { paramsTuple?: []; params?: {} }
     'auth.logout': { paramsTuple?: []; params?: {} }
     'tweets.store': { paramsTuple?: []; params?: {} }
   }

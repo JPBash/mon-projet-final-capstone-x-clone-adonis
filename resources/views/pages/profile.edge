@@ -16,7 +16,13 @@
                     <a href="{{ route('profile.show') }}" class="nav-link active">Profil</a>
                 </nav>
                 <div class="user-chip">
-                  <div class="avatar">{{ user.fullName.charAt(0) }}</div>
+                  <div class="avatar">
+                    @if(user.avatarUrl)
+                      <img src="{{ user.avatarUrl }}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
+                    @else
+                      {{ user.fullName.charAt(0) }}
+                    @endif
+                  </div>
                   <div>
                     <p><strong>{{ user.fullName }}</strong></p>
                     <p class="muted">{{ user.email }}</p>
@@ -25,34 +31,47 @@
             </aside>
 
             <section class="profile-page">
-                <div class="profile-cover" id="profile-cover" style="background-color: #333; height: 200px;"></div>
-                
-                <div class="profile-head">
-                    <div class="profile-avatar-wrap">
-                        {{-- On affiche l'initiale dans l'avatar XL --}}
-                        <div class="avatar avatar-xl" id="profile-avatar" style="width: 120px; height: 120px; font-size: 3rem; border: 4px solid black; margin-top: -60px; background: #1da1f2; display: flex; align-items: center; justify-content: center;">
-                            {{ user.fullName.charAt(0) }}
-                        </div>
+                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+                    {{ csrfField() }}
+                    
+                    {{-- Couverture --}}
+                    <div class="profile-cover" 
+                         style="background-image: url('{{ user.coverUrl || '/default-cover.jpg' }}'); background-size: cover; background-position: center; height: 200px; background-color: #333;">
                     </div>
                     
-                    <div style="margin-top: 1rem;">
-                        {{-- On injecte les vraies infos ici --}}
-                        <h2 id="profile-name">{{ user.fullName }}</h2>
-                        <p class="muted" id="profile-handle">{{ user.email }}</p>
-                        <p class="bio" id="profile-bio">Passionné par le développement avec AdonisJS.</p>
-                    </div>
-                </div>
+                    <div class="profile-head" style="padding: 0 1rem;">
+                        <div class="profile-avatar-wrap">
+                            <div class="avatar avatar-xl" 
+                                 style="background-image: url('{{ user.avatarUrl || '' }}'); background-size: cover; background-position: center; width: 120px; height: 120px; border: 4px solid black; margin-top: -60px; background-color: #1da1f2; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+                                @if(!user.avatarUrl)
+                                    {{ user.fullName.charAt(0) }}
+                                @endif
+                            </div>
+                        </div>
 
-                <div class="stats" id="profile-stats" style="margin: 1rem 0; display: flex; gap: 20px;">
+                        <div style="margin-top: 15px;">
+                            <h2>{{ user.fullName }}</h2>
+                            <p class="muted">{{ user.email }}</p>
+                        </div>
+
+                        <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px; padding: 10px; background: #16181c; border-radius: 10px;">
+                            <label style="font-size: 0.8rem; color: gray;">Modifier les photos :</label>
+                            <input type="file" name="avatar" accept="image/*" style="font-size: 0.8rem;">
+                            <input type="file" name="cover" accept="image/*" style="font-size: 0.8rem;">
+                            <button type="submit" class="btn btn-primary" style="width: fit-content; padding: 5px 15px;">Enregistrer</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="stats" style="padding: 1rem; display: flex; gap: 20px;">
                     <span><strong>0</strong> Abonnements</span>
                     <span><strong>0</strong> Abonnés</span>
                 </div>
 
-                <hr style="border: 0.5px solid #333; margin: 1rem 0;">
+                <hr style="border: 0.5px solid #333; margin: 0;">
                 
-                <h3>Mes Posts</h3>
+                <h3 style="padding: 1rem;">Mes Posts</h3>
                 <div id="profile-tweets" class="tweet-list">
-                    {{-- On boucle sur les tweets de l'utilisateur --}}
                     @each(tweet in tweets)
                         <div class="tweet" style="padding: 1rem; border-bottom: 1px solid #333; display: flex; gap: 1rem;">
                             <div class="avatar">{{ user.fullName.charAt(0) }}</div>
@@ -62,7 +81,7 @@
                             </div>
                         </div>
                     @else
-                        <p style="padding: 2rem; text-align: center;" class="muted">Vous n'avez pas encore posté de tweets.</p>
+                        <p style="padding: 2rem; text-align: center;" class="muted">Vous n'avez pas encore posté.</p>
                     @endeach
                 </div>
             </section>
