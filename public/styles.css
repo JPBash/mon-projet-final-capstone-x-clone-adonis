@@ -455,3 +455,7 @@ input[type="file"] {
 .simple-list li:last-child {
   border-bottom: none;
 }
+
+.nav-link:contains('Grok') {
+    font-weight: 800;
+}
