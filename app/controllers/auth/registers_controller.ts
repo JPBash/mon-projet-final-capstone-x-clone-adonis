@@ -1,8 +1,9 @@
 import User from '#models/user'
 import Tweet from '#models/tweet'
 import { type HttpContext } from '@adonisjs/core/http'
-import { cuid } from '@adonisjs/core/helpers'
 import app from '@adonisjs/core/services/app'
+import { randomUUID } from 'node:crypto' // Ajout de l'importation pour les noms de fichiers uniques
+
 export default class RegisterController {
   async show({ view }: HttpContext) {
     return view.render('auth/register')
@@ -33,7 +34,6 @@ export default class RegisterController {
     return view.render('pages/profile', { user, tweets })
   }
 
-// ... à l'intérieur de ta classe RegisterController
   async updateProfile({ request, auth, response }: HttpContext) {
     const user = auth.user!
 
@@ -41,13 +41,15 @@ export default class RegisterController {
     const cover = request.file('cover', { size: '5mb', extnames: ['jpg', 'png', 'jpeg'] })
 
     if (avatar) {
-      const fileName = `${cuid()}.${avatar.extname}`
+      //  Modification ici : utilisation de randomUUID()
+      const fileName = `${randomUUID()}.${avatar.extname}`
       await avatar.move(app.publicPath('uploads'), { name: fileName })
       user.avatarUrl = `/uploads/${fileName}`
     }
 
     if (cover) {
-      const fileName = `${cuid()}.${cover.extname}`
+      //  Modification ici : utilisation de randomUUID()
+      const fileName = `${randomUUID()}.${cover.extname}`
       await cover.move(app.publicPath('uploads'), { name: fileName })
       user.coverUrl = `/uploads/${fileName}`
     }
