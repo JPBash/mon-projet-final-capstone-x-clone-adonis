@@ -21,7 +21,7 @@ Clone full-stack de X (Twitter) réalisé avec **AdonisJS 6**.
 - **Protection** : Middlewares sur les routes sensibles.
 - **REST** : Utilisation du Method Spoofing (`_method`).
 
-## 🛠️ Installation rapide
+// Installation rapide
 
 1. Setup :
    Terminal : bash
