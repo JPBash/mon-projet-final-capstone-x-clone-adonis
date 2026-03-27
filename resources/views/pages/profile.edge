@@ -3,143 +3,142 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Profil de {{ user.fullName }}</title>
+    <title>Profil - {{ auth.user.fullName }}</title>
     <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-    <main class="app-shell">
-        <div class="layout">
+    <main id="app" class="app-shell">
+        
+        @if(auth.user)
+          <div class="layout">
             {{-- Sidebar --}}
             <aside class="sidebar">
-                <div class="brand">X</div>
-                <nav class="nav-menu">
-                    <a href="{{ route('home') }}" class="nav-link">Accueil</a>
-                    <a href="{{ route('profile.show') }}" class="nav-link active">Profil</a>
-                </nav>
-                <div class="user-chip">
-                  <div class="avatar">
-                    @if(user.avatarUrl)
-                      <img src="{{ user.avatarUrl }}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
-                    @else
-                      {{ user.fullName.charAt(0) }}
-                    @endif
-                  </div>
-                  <div>
-                    <p><strong>{{ user.fullName }}</strong></p>
-                    <p class="muted">{{ user.email }}</p>
-                  </div>
+              <div class="brand">X</div>
+              <nav class="nav-menu">
+                <a href="{{ route('home') }}" class="nav-link">Accueil</a>
+                <button class="nav-link">Explorer</button>
+                <button class="nav-link">Notifications</button>
+                <button class="nav-link">Messages</button>
+                <button class="nav-link">Paramètres</button>
+                <a href="{{ route('profile.show') }}" class="nav-link active">Profil</a>
+              </nav>
+
+              <div class="user-chip">
+                <div class="avatar">
+                  @if(auth.user.avatarUrl)
+                    <img src="{{ auth.user.avatarUrl }}" alt="Avatar">
+                  @else
+                    <div class="avatar-placeholder">{{ auth.user.fullName.charAt(0) }}</div>
+                  @endif
                 </div>
+                <div>
+                  <p><strong>{{ auth.user.fullName }}</strong></p>
+                  <p class="muted">{{ auth.user.email }}</p>
+                </div>
+              </div>
             </aside>
 
+            {{-- Page Profil --}}
             <section class="profile-page">
-                {{-- Cas : C'est MON profil (Mode Édition) --}}
-                @if(auth.user.id === user.id)
-                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
-                    {{ csrfField() }}
-                    
-                    <div class="profile-cover" 
-                         style="background-image: url('{{ user.coverUrl || '/default-cover.jpg' }}'); background-size: cover; background-position: center; height: 200px; background-color: #333;">
-                    </div>
-                    
-                    <div class="profile-head" style="padding: 0 1rem;">
-                        <div class="profile-avatar-wrap">
-                            <div class="avatar avatar-xl" 
-                                 style="background-image: url('{{ user.avatarUrl || '' }}'); background-size: cover; background-position: center; width: 120px; height: 120px; border: 4px solid black; margin-top: -60px; background-color: #1da1f2; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
-                                @if(!user.avatarUrl)
-                                    <span style="font-size: 3rem;">{{ user.fullName.charAt(0) }}</span>
-                                @endif
-                            </div>
-                        </div>
+              {{-- Header de navigation --}}
+              <header class="feed-header" style="display: flex; align-items: center; gap: 20px;">
+                <a href="{{ route('home') }}" style="padding-left: 15px; font-size: 1.2rem;">←</a>
+                <div>
+                  <h2 style="padding: 5px 0 0 0;">{{ auth.user.fullName }}</h2>
+                  <p class="muted" style="font-size: 13px; padding-bottom: 5px;">{{ tweets.length }} posts</p>
+                </div>
+              </header>
 
-                        <div style="margin-top: 15px;">
-                            <h2 style="margin:0;">{{ user.fullName }}</h2>
-                            <p class="muted">{{ user.email }}</p>
-                            
-                            <div style="margin-top: 10px;">
-                                <textarea name="bio" placeholder="Ajouter une bio..." 
-                                    style="width: 100%; background: transparent; border: 1px solid #333; color: white; border-radius: 8px; padding: 8px;">{{ user.bio || '' }}</textarea>
-                            </div>
-                        </div>
+              {{-- Bannière / Couverture --}}
+              <div class="profile-cover" style="background-image: url('{{ auth.user.coverUrl || 'https://via.placeholder.com/1500x500' }}');">
+              </div>
 
-                        <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px; padding: 10px; background: #16181c; border-radius: 10px;">
-                            <div style="display:flex; gap: 10px;">
-                                <div>
-                                    <label style="font-size: 0.7rem; color: gray; display:block;">Avatar :</label>
-                                    <input type="file" name="avatar" accept="image/*" style="font-size: 0.7rem;">
-                                </div>
-                                <div>
-                                    <label style="font-size: 0.7rem; color: gray; display:block;">Couverture :</label>
-                                    <input type="file" name="cover" accept="image/*" style="font-size: 0.7rem;">
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary" style="width: fit-content; padding: 5px 15px;">Enregistrer le profil</button>
-                        </div>
-                    </div>
-                </form>
-
-                {{-- Cas : C'est le profil de QUELQU'UN D'AUTRE --}}
-                @else
-                  <div class="profile-cover" style="background-image: url('{{ user.coverUrl || '/default-cover.jpg' }}'); height: 200px; background-size: cover; background-position: center; background-color: #333;"></div>
-                  <div style="padding: 0 1rem;">
-                      <div class="avatar avatar-xl" style="background-image: url('{{ user.avatarUrl || '' }}'); width: 120px; height: 120px; border: 4px solid black; margin-top: -60px; background-color: #1da1f2; background-size: cover; display: flex; align-items: center; justify-content: center;">
-                         @if(!user.avatarUrl)
-                           <span style="font-size: 3rem;">{{ user.fullName.charAt(0) }}</span>
-                         @endif
-                      </div>
-                      <h2 style="margin-top: 15px; margin-bottom: 0;">{{ user.fullName }}</h2>
-                      <p class="muted">{{ user.email }}</p>
-                      <p style="margin-top: 10px; color: white;">{{ user.bio || 'Aucune bio disponible.' }}</p>
+              {{-- Infos de tête --}}
+              <div class="profile-head">
+                <div class="profile-avatar-wrap">
+                  <div class="avatar avatar-xl">
+                    @if(auth.user.avatarUrl)
+                      <img src="{{ auth.user.avatarUrl }}" alt="Avatar">
+                    @else
+                      <div class="avatar-placeholder" style="font-size: 3rem;">{{ auth.user.fullName.charAt(0) }}</div>
+                    @endif
                   </div>
+                </div>
+
+                {{-- Boutons d'édition (Formulaire masqué ou visible) --}}
+                <div style="display: flex; justify-content: flex-end; padding: 12px 0;">
+                   <button class="btn btn-outline" onclick="document.getElementById('edit-form').style.display='block'">Éditer le profil</button>
+                </div>
+
+                <h2>{{ auth.user.fullName }}</h2>
+                <p class="muted">{{ auth.user.email }}</p>
+                
+                @if(auth.user.bio)
+                  <p style="margin-top: 12px;">{{ auth.user.bio }}</p>
                 @endif
 
-                {{-- Statistiques et Bouton Follow --}}
-                <div class="stats" style="padding: 1rem; display: flex; align-items: center; gap: 20px;">
-                    <span><strong>{{ user.$extras.following_count || 0 }}</strong> Abonnements</span>
-                    <span><strong>{{ user.$extras.followers_count || 0 }}</strong> Abonnés</span>
-                    
-                    @if(auth.user.id !== user.id)
-                      <form action="{{ route('profile.follow', { id: user.id }) }}" method="POST">
-                        {{ csrfField() }}
-                        <button type="submit" class="btn" style="border-radius: 20px; padding: 6px 16px; font-weight: bold; cursor: pointer; background: white; color: black; border: none;">
-                          Suivre / Ne plus suivre
-                        </button>
-                      </form>
-                    @endif
+                <div class="stats">
+                  <span><strong>0</strong> Abonnements</span>
+                  <span><strong>0</strong> Abonnés</span>
                 </div>
+              </div>
 
-                <hr style="border: 0.5px solid #333; margin: 0;">
-                
-                <h3 style="padding: 1rem;">Posts</h3>
-                <div class="tweet-list">
-                    @each(tweet in tweets)
-                        <div class="tweet" style="padding: 1rem; border-bottom: 1px solid #333; display: flex; gap: 1rem; position: relative;">
-                            <div class="avatar" style="width:40px; height:40px; background-color: #1da1f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; overflow: hidden; background-size: cover; background-image: url('{{ user.avatarUrl || '' }}')">
-                                @if(!user.avatarUrl) 
-                                  <span>{{ user.fullName.charAt(0) }}</span> 
-                                @endif
-                            </div>
-                            <div style="flex: 1;">
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <strong>{{ user.fullName }}</strong>
-                                    
-                                    @if(tweet.userId === auth.user.id)
-                                      <form action="{{ route('tweets.destroy', { id: tweet.id }) }}?_method=DELETE" method="POST">
-                                        {{ csrfField() }}
-                                        <button type="submit" style="color: #f4212e; background: none; border: none; cursor: pointer; font-size: 1.2rem;" onclick="return confirm('Supprimer ce tweet ?')">
-                                          &times;
-                                        </button>
-                                      </form>
-                                    @endif
-                                </div>
-                                <p style="margin-top: 5px; color: white;">{{ tweet.content }}</p>
-                            </div>
-                        </div>
-                    @else
-                        <p style="padding: 2rem; text-align: center;" class="muted">Aucun post pour le moment.</p>
-                    @endeach
-                </div>
+              {{-- Formulaire d'édition (caché par défaut) --}}
+              <div id="edit-form" style="display: none; padding: 16px; border-bottom: 1px solid var(--border-color);">
+                <form action="{{ route('profile.update') }}?_method=PUT" method="POST" enctype="multipart/form-data" class="profile-edit-photos">
+                  {{ csrfField() }}
+                  <label>Changer l'avatar :</label>
+                  <input type="file" name="avatar" accept="image/*">
+                  
+                  <label>Changer la couverture :</label>
+                  <input type="file" name="cover" accept="image/*">
+
+                  <label>Biographie :</label>
+                  <textarea name="bio" placeholder="Racontez votre histoire...">{{ auth.user.bio || '' }}</textarea>
+
+                  <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    <button type="button" class="btn btn-outline" onclick="document.getElementById('edit-form').style.display='none'">Annuler</button>
+                  </div>
+                </form>
+              </div>
+
+              <div class="profile-tweets-title">Mes Posts</div>
+
+              {{-- Liste des Tweets de l'utilisateur --}}
+              <div class="tweet-list">
+                @each(tweet in tweets)
+                  <div class="tweet">
+                    <div class="avatar">
+                      @if(auth.user.avatarUrl)
+                        <img src="{{ auth.user.avatarUrl }}" alt="Avatar">
+                      @else
+                        <div class="avatar-placeholder">{{ auth.user.fullName.charAt(0) }}</div>
+                      @endif
+                    </div>
+                    <div class="tweet-content">
+                      <strong>{{ auth.user.fullName }}</strong>
+                      <span class="muted">{{ auth.user.email }}</span>
+                      <p>{{ tweet.content }}</p>
+                    </div>
+                  </div>
+                @endeach
+              </div>
             </section>
-        </div>
+
+            {{-- Panel Droit --}}
+            <aside class="right-panel">
+              <div class="search-box">
+                <input type="text" placeholder="Chercher" />
+              </div>
+              <div class="card">
+                <h3>Suggestions</h3>
+                <p class="muted" style="font-size: 13px;">Bientôt disponible...</p>
+              </div>
+            </aside>
+          </div>
+        @endif
+
     </main>
 </body>
 </html>
