@@ -7,6 +7,7 @@ export default class extends BaseSchema {
     this.schema.alterTable(this.tableName, (table) => {
       table.string('avatar_url').nullable()
       table.string('cover_url').nullable()
+      table.text('bio').nullable()
     })
   }
 
@@ -14,6 +15,7 @@ export default class extends BaseSchema {
     this.schema.alterTable(this.tableName, (table) => {
       table.dropColumn('avatar_url')
       table.dropColumn('cover_url')
+      table.dropColumn('bio')
     })
   }
 }

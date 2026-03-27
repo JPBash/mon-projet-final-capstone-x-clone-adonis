@@ -1,7 +1,8 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, belongsTo } from '@adonisjs/lucid/orm'
-import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import { BaseModel, column, belongsTo, hasMany } from '@adonisjs/lucid/orm'
+import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import User from '#models/user'
+import Like from '#models/like'
 
 export default class Tweet extends BaseModel {
   @column({ isPrimary: true })
@@ -21,4 +22,6 @@ export default class Tweet extends BaseModel {
 
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
+  @hasMany(() => Like)
+  declare likes: HasMany<typeof Like>
 }

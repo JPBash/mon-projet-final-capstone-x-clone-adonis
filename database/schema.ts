@@ -7,6 +7,32 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
+export class FollowSchema extends BaseModel {
+  static $columns = ['id', 'followerId', 'followingId', 'createdAt'] as const
+  $columns = FollowSchema.$columns
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare followerId: number | null
+  @column()
+  declare followingId: number | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+}
+
+export class LikeSchema extends BaseModel {
+  static $columns = ['id', 'userId', 'tweetId', 'createdAt'] as const
+  $columns = LikeSchema.$columns
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare userId: number | null
+  @column()
+  declare tweetId: number | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+}
+
 export class TweetSchema extends BaseModel {
   static $columns = ['id', 'userId', 'content', 'createdAt', 'updatedAt'] as const
   $columns = TweetSchema.$columns
@@ -23,7 +49,7 @@ export class TweetSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = ['id', 'fullName', 'email', 'password', 'createdAt', 'updatedAt', 'avatarUrl', 'coverUrl'] as const
+  static $columns = ['id', 'fullName', 'email', 'password', 'createdAt', 'updatedAt', 'avatarUrl', 'coverUrl', 'bio'] as const
   $columns = UserSchema.$columns
   @column({ isPrimary: true })
   declare id: number
@@ -41,4 +67,6 @@ export class UserSchema extends BaseModel {
   declare avatarUrl: string | null
   @column()
   declare coverUrl: string | null
+  @column()
+  declare bio: string | null
 }

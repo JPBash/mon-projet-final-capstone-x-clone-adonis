@@ -25,8 +25,7 @@ router
     router.post('login', [controllers.Session, 'store']).as('session.store')
   })
   .use(middleware.guest())
-
-// 3. Groupe pour les connectés
+//  Groupe pour les connectés
 router
   .group(() => {
     router.get('/profile', [RegisterController, 'showProfile']).as('profile.show')
@@ -36,4 +35,19 @@ router
     // Route pour poster un tweet
     router.post('tweets', [TweetsStoreController, 'handle']).as('tweets.store')
   })
+  .use(middleware.auth())
+
+router
+  .delete('/tweets/:id', '#controllers/tweets/destroys_controller.handle')
+  .as('tweets.destroy')
+
+  .use(middleware.auth())
+router
+  .post('/tweets/:id/like', '#controllers/tweets/likes_controller.handle')
+  .as('tweets.like')
+  .use(middleware.auth())
+
+router
+  .post('/profile/:id/follow', '#controllers/profiles/follows_controller.handle')
+  .as('profile.follow')
   .use(middleware.auth())

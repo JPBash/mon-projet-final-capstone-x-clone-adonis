@@ -14,10 +14,11 @@
         
         @if(auth.user)
           <div class="layout">
+            {{-- Sidebar --}}
             <aside class="sidebar">
               <div class="brand">X</div>
               <nav class="nav-menu">
-                <button class="nav-link active">Accueil</button>
+                <a href="{{ route('home') }}" class="nav-link active">Accueil</a>
                 <button class="nav-link">Explorer</button>
                 <button class="nav-link">Notifications</button>
                 <button class="nav-link">Messages</button>
@@ -25,65 +26,129 @@
                 <a href="{{ route('profile.show') }}" class="nav-link">Profil</a>
               </nav>
 
+              {{-- SECTION USER CHIP (CORRIGÉE) --}}
               <div class="user-chip">
-                {{-- On remplace les id vides par les vraies données Adonis --}}
-                <div class="avatar">{{ auth.user.fullName.charAt(0) }}</div>
+                <div class="avatar" style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; background: #1da1f2; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                  @if(auth.user.avatarUrl)
+                    <img src="{{ auth.user.avatarUrl }}" style="width:100%; height:100%; object-fit:cover;">
+                  @else
+                    <span style="font-weight: bold; color: white;">
+                      {{ auth.user.fullName.charAt(0) }}
+                    </span>
+                  @endif
+                </div>
                 <div>
                   <p><strong>{{ auth.user.fullName }}</strong></p>
-                  <p class="muted">{{ auth.user.email }}</p>
+                  <p class="muted" style="font-size: 0.85rem;">{{ auth.user.email }}</p>
                 </div>
               </div>
 
-              {{-- Formulaire de déconnexion (obligatoire pour que le bouton fonctionne) --}}
               <form action="{{ route('auth.logout') }}" method="POST">
                 {{ csrfField() }}
-                <button type="submit" class="btn btn-outline" style="width: 100%; margin-top: 10px;">Se deconnecter</button>
+                <button type="submit" class="btn btn-outline" style="width: 100%; margin-top: 10px;">Se déconnecter</button>
               </form>
             </aside>
 
+            {{-- Flux Principal --}}
             <section class="feed-panel">
               <header class="feed-header">
-                <div class="tabs">
-                  <button class="tab active">Pour vous</button>
-                  <button class="tab">Abonnements</button>
+                <div class="tabs" style="display: flex; border-bottom: 1px solid #333;">
+                  <a href="{{ route('home') }}?tab=all" 
+                     class="tab {{ currentTab === 'all' || !currentTab ? 'active' : '' }}" 
+                     style="flex: 1; text-align: center; padding: 15px; text-decoration: none; color: inherit; font-weight: bold;">
+                     Pour vous
+                  </a>
+                  <a href="{{ route('home') }}?tab=following" 
+                     class="tab {{ currentTab === 'following' ? 'active' : '' }}" 
+                     style="flex: 1; text-align: center; padding: 15px; text-decoration: none; color: inherit; font-weight: bold;">
+                     Abonnements
+                  </a>
                 </div>
               </header>
 
-              {{-- IMPORTANT : On enlève la classe "hidden" et on ajoute action/method --}}
-              <form action="{{ route('tweets.store') }}" method="POST" class="tweet-box">
-                {{ csrfField() }}
-                <div class="avatar">{{ auth.user.fullName.charAt(0) }}</div>
-                @if(auth.user.avatarUrl)
-                <img src="{{ auth.user.avatarUrl }}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">
-                @else
-                {{ auth.user.fullName.charAt(0) }}
-                @endif
-                <div class="tweet-input-wrap">
-                  <textarea
-                    name="content"
-                    maxlength="280"
-                    placeholder="Quoi de neuf ?"
-                    required
-                  ></textarea>
-                  <div class="tweet-actions">
-                    <button type="submit" class="btn btn-primary">Poster</button>
-                  </div>
-                </div>
-              </form>
+              {{-- Boîte de publication --}}
+               <form action="{{ route('tweets.store') }}" method="POST" class="tweet-box" style="padding: 15px; border-bottom: 1px solid #333;">
+                 {{ csrfField() }}
+                 <div style="display: flex; gap: 10px;">
+                    <div class="avatar" style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; background: #1da1f2; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                      @if(auth.user.avatarUrl)
+                        <img src="{{ auth.user.avatarUrl }}" style="width:100%; height:100%; object-fit:cover;">
+                      @else
+                        <span style="font-weight: bold; color: white;">{{ auth.user.fullName.charAt(0) }}</span>
+                      @endif
+                    </div>
+                    <div class="tweet-input-wrap" style="flex: 1;">
+                      <textarea
+                        name="content"
+                        maxlength="280"
+                        placeholder="Quoi de neuf ?"
+                        required
+                        style="width: 100%; background: transparent; border: none; color: white; resize: none; font-size: 1.2rem; outline: none; min-height: 80px;"
+                      ></textarea>
+                      <div class="tweet-actions" style="display: flex; justify-content: flex-end; border-top: 1px solid #333; padding-top: 10px;">
+                        <button type="submit" class="btn btn-primary">Poster</button>
+                      </div>
+                    </div>
+                 </div>
+               </form>
 
+              {{-- Liste des Tweets --}}
               <div id="feed-list" class="tweet-list">
                 @each(tweet in tweets)
-                  <div class="tweet" style="padding: 1rem; border-bottom: 1px solid #333; display: flex; gap: 1rem;">
-                    <div class="avatar">{{ tweet.user.fullName.charAt(0) }}</div>
-                    <div>
-                      <strong>{{ tweet.user.fullName }}</strong>
-                      <p>{{ tweet.content }}</p>
+                  <div class="tweet" style="border-bottom: 1px solid #333; padding: 15px; display: flex; gap: 15px;">
+                    <div class="avatar" style="width: 40px; height: 40px; flex-shrink: 0; background: #333; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+                      @if(tweet.user.avatarUrl)
+                        <img src="{{ tweet.user.avatarUrl }}" style="width:100%; height:100%; object-fit:cover;">
+                      @else
+                        {{ tweet.user.fullName.charAt(0) }}
+                      @endif
                     </div>
+
+                    <div style="flex: 1;">
+                      <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div>
+                          <strong>{{ tweet.user.fullName }}</strong>
+                          <span class="muted" style="margin-left: 5px;">{{ tweet.user.email }}</span>
+                        </div>
+
+                        @if(tweet.userId === auth.user.id)
+                          <form action="{{ route('tweets.destroy', { id: tweet.id }) }}?_method=DELETE" method="POST">
+                            {{ csrfField() }}
+                            <button type="submit" style="background: none; border: none; color: #f4212e; cursor: pointer; font-size: 0.8rem;" onclick="return confirm('Supprimer ce tweet ?')">
+                                Supprimer
+                            </button>
+                          </form>
+                        @endif
+                      </div>
+
+                      <p style="margin-top: 5px; line-height: 1.4; color: white;">
+                        {{ tweet.content }}
+                      </p>
+
+                      <div style="display: flex; gap: 20px; align-items: center; margin-top: 12px;">
+                        <form action="{{ route('tweets.like', { id: tweet.id }) }}" method="POST">
+                          {{ csrfField() }}
+                          <button type="submit" style="background: none; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px; color: {{ (tweet.likes && tweet.likes.some(l => l.userId === auth.user.id)) ? '#f91880' : '#71767b' }};">
+                            @if(tweet.likes && tweet.likes.some(l => l.userId === auth.user.id))
+                              <span style="font-size: 1.2rem;">❤️</span>
+                            @else
+                              <span style="font-size: 1.2rem;">🤍</span>
+                            @endif
+                            <span style="font-weight: 500;">{{ tweet.$extras.likes_count || 0 }}</span>
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                @else
+                  <div style="padding: 40px; text-align: center; color: #71767b;">
+                    <p>Aucun tweet à afficher pour le moment.</p>
                   </div>
                 @endeach
               </div>
             </section>
 
+            {{-- Panel Droit --}}
             <aside class="right-panel">
               <div class="search-box">
                 <input type="text" placeholder="Chercher" />

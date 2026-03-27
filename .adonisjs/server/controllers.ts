@@ -12,5 +12,10 @@ export const controllers = {
   Session: () => import('#controllers/session_controller'),
   tweets: {
     Stores: () => import('#controllers/tweets/stores_controller'),
+    Destroys: () => import('#controllers/tweets/destroys_controller'),
+    Likes: () => import('#controllers/tweets/likes_controller'),
+  },
+  profiles: {
+    Follow: () => import('#controllers/profiles/follow_controller'),
   },
 }

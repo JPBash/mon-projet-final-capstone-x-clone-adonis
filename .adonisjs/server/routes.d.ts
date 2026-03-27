@@ -13,6 +13,9 @@ export type ScannedRoutes = {
     'profile.update': { paramsTuple?: []; params?: {} }
     'auth.logout': { paramsTuple?: []; params?: {} }
     'tweets.store': { paramsTuple?: []; params?: {} }
+    'tweets.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'tweets.like': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'profile.follow': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   GET: {
     'home': { paramsTuple?: []; params?: {} }
@@ -32,6 +35,11 @@ export type ScannedRoutes = {
     'profile.update': { paramsTuple?: []; params?: {} }
     'auth.logout': { paramsTuple?: []; params?: {} }
     'tweets.store': { paramsTuple?: []; params?: {} }
+    'tweets.like': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'profile.follow': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+  }
+  DELETE: {
+    'tweets.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {
