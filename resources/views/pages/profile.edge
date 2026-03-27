@@ -18,7 +18,7 @@
                 <a href="{{ route('home') }}" class="nav-link">Accueil</a>
                 <button class="nav-link">Explorer</button>
                 <button class="nav-link">Notifications</button>
-                <button class="nav-link" onclick="alert('Grok est en train de réfléchir... Revenez plus tard !')">Grok</button>
+                <button class="nav-link" onclick="window.open('https://x.com/i/grok', '_blank')">Grok</button>
                 <button class="nav-link">Paramètres</button>
                 <button class="nav-link">Messages</button>
                 <button class="nav-link">Paramètres</button>
@@ -85,9 +85,8 @@
                 </div>
               </div>
 
-              {{-- Formulaire d'édition (caché par défaut) --}}
               <div id="edit-form" style="display: none; padding: 16px; border-bottom: 1px solid var(--border-color);">
-                <form action="{{ route('profile.update') }}?_method=PUT" method="POST" enctype="multipart/form-data" class="profile-edit-photos">
+                <form action="{{ route('profile.update') }} " method="POST" enctype="multipart/form-data" class="profile-edit-photos">
                   {{ csrfField() }}
                   <label>Changer l'avatar :</label>
                   <input type="file" name="avatar" accept="image/*">

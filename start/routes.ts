@@ -7,11 +7,6 @@ const TweetsStoreController = () => import('#controllers/tweets/stores_controlle
 // 1. La page d'accueil (Home)
 router.get('/', [RegisterController, 'showHome']).as('home')
 
-// 2. Groupe pour les invités (Non connectés)
-// start/routes.ts
-
-// start/routes.ts
-
 router
   .group(() => {
     // Page d'affichage de l'inscription
