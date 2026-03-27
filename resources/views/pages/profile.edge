@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profil de {{ user.fullName }}</title>
+    <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+    <main class="app-shell">
+        <div class="layout">
+            <aside class="sidebar">
+                <div class="brand">X</div>
+                <nav class="nav-menu">
+                    <a href="{{ route('home') }}" class="nav-link">Accueil</a>
+                    <a href="{{ route('profile.show') }}" class="nav-link active">Profil</a>
+                </nav>
+                <div class="user-chip">
+                  <div class="avatar">{{ user.fullName.charAt(0) }}</div>
+                  <div>
+                    <p><strong>{{ user.fullName }}</strong></p>
+                    <p class="muted">{{ user.email }}</p>
+                  </div>
+                </div>
+            </aside>
+
+            <section class="profile-page">
+                <div class="profile-cover" id="profile-cover" style="background-color: #333; height: 200px;"></div>
+                
+                <div class="profile-head">
+                    <div class="profile-avatar-wrap">
+                        {{-- On affiche l'initiale dans l'avatar XL --}}
+                        <div class="avatar avatar-xl" id="profile-avatar" style="width: 120px; height: 120px; font-size: 3rem; border: 4px solid black; margin-top: -60px; background: #1da1f2; display: flex; align-items: center; justify-content: center;">
+                            {{ user.fullName.charAt(0) }}
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 1rem;">
+                        {{-- On injecte les vraies infos ici --}}
+                        <h2 id="profile-name">{{ user.fullName }}</h2>
+                        <p class="muted" id="profile-handle">{{ user.email }}</p>
+                        <p class="bio" id="profile-bio">Passionné par le développement avec AdonisJS.</p>
+                    </div>
+                </div>
+
+                <div class="stats" id="profile-stats" style="margin: 1rem 0; display: flex; gap: 20px;">
+                    <span><strong>0</strong> Abonnements</span>
+                    <span><strong>0</strong> Abonnés</span>
+                </div>
+
+                <hr style="border: 0.5px solid #333; margin: 1rem 0;">
+                
+                <h3>Mes Posts</h3>
+                <div id="profile-tweets" class="tweet-list">
+                    {{-- On boucle sur les tweets de l'utilisateur --}}
+                    @each(tweet in tweets)
+                        <div class="tweet" style="padding: 1rem; border-bottom: 1px solid #333; display: flex; gap: 1rem;">
+                            <div class="avatar">{{ user.fullName.charAt(0) }}</div>
+                            <div>
+                                <strong>{{ user.fullName }}</strong>
+                                <p>{{ tweet.content }}</p>
+                            </div>
+                        </div>
+                    @else
+                        <p style="padding: 2rem; text-align: center;" class="muted">Vous n'avez pas encore posté de tweets.</p>
+                    @endeach
+                </div>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

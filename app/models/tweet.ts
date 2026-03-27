@@ -8,10 +8,10 @@ export default class Tweet extends BaseModel {
   declare id: number
 
   @column()
-  declare userId: number
+  declare content: string
 
   @column()
-  declare content: string
+  declare userId: number
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
@@ -19,7 +19,6 @@ export default class Tweet extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
 
-  // relation tweet -> user un tweet appartient à un utilisateur
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
 }

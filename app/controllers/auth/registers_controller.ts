@@ -1,30 +1,34 @@
 import User from '#models/user'
-import { HttpContext } from '@adonisjs/core/http'
+import Tweet from '#models/tweet'
+import { type HttpContext } from '@adonisjs/core/http'
 
 export default class RegisterController {
-  /**
-   * Affiche le formulaire d'inscription
-   */
   async show({ view }: HttpContext) {
     return view.render('auth/register')
   }
-  async showHome({ view }: HttpContext) {
-    return view.render('pages/home')
+
+  async showHome({ view, auth }: HttpContext) {
+    const user = auth.user
+    let tweets: Tweet[] = []
+
+    if (user) {
+      tweets = await Tweet.query().preload('user').orderBy('createdAt', 'desc')
+    }
+
+    return view.render('pages/home', { tweets })
   }
-  /**
-   * Enregistre l'utilisateur en base de données
-   */
+
   async store({ request, response, auth }: HttpContext) {
-    // 1. Récupérer les données du formulaire
-    const data = request.only(['full_name', 'email', 'password'])
-
-    // 2. Créer l'utilisateur dans PostgreSQL
+    const data = request.only(['fullName', 'email', 'password'])
     const user = await User.create(data)
-
-    // 3. Connecter l'utilisateur automatiquement
     await auth.use('web').login(user)
-
-    // 4. Rediriger vers la home
     return response.redirect().toRoute('home')
+  }
+
+  public async showProfile({ view, auth }: HttpContext) {
+    const user = auth.user!
+
+    const tweets = await user.related('tweets').query().orderBy('createdAt', 'desc')
+    return view.render('pages/profile', { user, tweets })
   }
 }

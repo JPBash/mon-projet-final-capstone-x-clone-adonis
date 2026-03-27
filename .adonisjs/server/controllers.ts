@@ -6,6 +6,7 @@
 export const controllers = {
   auth: {
     Registers: () => import('#controllers/auth/registers_controller'),
+    StoreControllers: () => import('#controllers/auth/store_controllers'),
   },
   NewAccount: () => import('#controllers/new_account_controller'),
   Session: () => import('#controllers/session_controller'),

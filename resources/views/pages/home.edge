@@ -1,57 +1,99 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Clone X - Capstone 1</title>
+    <title>Clone X - Accueil</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <main id="app" class="app-shell"></main>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+    <main id="app" class="app-shell">
+        
+        @if(auth.user)
+          <div class="layout">
+            <aside class="sidebar">
+              <div class="brand">X</div>
+              <nav class="nav-menu">
+                <button class="nav-link active">Accueil</button>
+                <button class="nav-link">Explorer</button>
+                <button class="nav-link">Notifications</button>
+                <button class="nav-link">Messages</button>
+                <button class="nav-link">Profil</button>
+              </nav>
 
-      <section class="welcome-layout">
-        <div class="welcome-logo-wrap">
-          <div class="x-mark" aria-hidden="true">X</div>
-        </div>
-        <div class="welcome-panel">
-          <h1>Ca se passe maintenant</h1>
-          <h2>Inscrivez-vous.</h2>
-          <button id="open-signup" class="btn btn-primary">Creer un compte</button>
-          <div class="divider"><span>ou</span></div>
-          <p class="helper-text">Vous avez deja un compte ?</p>
-          <button id="open-login" class="btn btn-outline">Se connecter</button>
-        </div>
-      </section>
-  
-    <dialog id="auth-dialog" class="auth-dialog">
-      <form method="dialog" class="auth-card" id="auth-form">
-        <button type="button" class="dialog-close" id="close-auth">x</button>
-        <h2 id="auth-title">Se connecter</h2>
-        <div id="signup-only" class="hidden">
-          <input name="name" placeholder="Nom et prenom" />
-          <input name="username" placeholder="Pseudo" />
-        </div>
-        <input type="email" name="email" placeholder="Email" required />
-        <input type="password" name="password" placeholder="Mot de passe" required />
-        <button type="submit" class="btn btn-primary btn-wide" id="auth-submit">Continuer</button>
-        <p class="muted" id="auth-switch-line"></p>
-      </form>
-    </dialog>
+              <div class="user-chip">
+                {{-- On remplace les id vides par les vraies données Adonis --}}
+                <div class="avatar">{{ auth.user.fullName.charAt(0) }}</div>
+                <div>
+                  <p><strong>{{ auth.user.fullName }}</strong></p>
+                  <p class="muted">{{ auth.user.email }}</p>
+                </div>
+              </div>
 
-    @if(auth.user)
-     <form action="{{ route('tweets.store') }}" method="POST" class="tweet-box">
-     {{ csrfField() }}
-     <textarea name="content" placeholder="Quoi de neuf ?" required></textarea>
-     <button type="submit">Poster</button>
-     </form>
-    @endif
+              {{-- Formulaire de déconnexion (obligatoire pour que le bouton fonctionne) --}}
+              <form action="{{ route('auth.logout') }}" method="POST">
+                {{ csrfField() }}
+                <button type="submit" class="btn btn-outline" style="width: 100%; margin-top: 10px;">Se deconnecter</button>
+              </form>
+            </aside>
 
-    <script src="app.js" defer></script>
-  </body>
+            <section class="feed-panel">
+              <header class="feed-header">
+                <div class="tabs">
+                  <button class="tab active">Pour vous</button>
+                  <button class="tab">Abonnements</button>
+                </div>
+              </header>
+
+              {{-- IMPORTANT : On enlève la classe "hidden" et on ajoute action/method --}}
+              <form action="{{ route('tweets.store') }}" method="POST" class="tweet-box">
+                {{ csrfField() }}
+                <div class="avatar">{{ auth.user.fullName.charAt(0) }}</div>
+                <div class="tweet-input-wrap">
+                  <textarea
+                    name="content"
+                    maxlength="280"
+                    placeholder="Quoi de neuf ?"
+                    required
+                  ></textarea>
+                  <div class="tweet-actions">
+                    <button type="submit" class="btn btn-primary">Poster</button>
+                  </div>
+                </div>
+              </form>
+
+              <div id="feed-list" class="tweet-list">
+                @each(tweet in tweets)
+                  <div class="tweet" style="padding: 1rem; border-bottom: 1px solid #333; display: flex; gap: 1rem;">
+                    <div class="avatar">{{ tweet.user.fullName.charAt(0) }}</div>
+                    <div>
+                      <strong>{{ tweet.user.fullName }}</strong>
+                      <p>{{ tweet.content }}</p>
+                    </div>
+                  </div>
+                @endeach
+              </div>
+            </section>
+
+            <aside class="right-panel">
+              <div class="search-box">
+                <input type="text" placeholder="Chercher" />
+              </div>
+              <section class="card">
+                <h3>Ce qui se passe</h3>
+                <ul class="simple-list">
+                  <li>#AdonisJS</li>
+                  <li>#KadeaAcademy</li>
+                  <li>#Actu Est de la RDC</li>
+                </ul>
+              </section>
+            </aside>
+          </div>
+        @endif
+
+    </main>
+</body>
 </html>

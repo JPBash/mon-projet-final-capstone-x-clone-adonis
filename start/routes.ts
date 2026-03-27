@@ -1,35 +1,39 @@
-/*
-|--------------------------------------------------------------------------
-| Routes file
-|--------------------------------------------------------------------------
-|
-| The routes file is used for defining the HTTP routes.
-|
-*/
-// eslint-disable-next-line @adonisjs/prefer-lazy-controller-import
-import RegisterController from '#controllers/auth/registers_controller'
-
+import router from '@adonisjs/core/services/router'
 import { middleware } from '#start/kernel'
 import { controllers } from '#generated/controllers'
-import router from '@adonisjs/core/services/router'
+const RegisterController = () => import('#controllers/auth/registers_controller')
+const TweetsStoreController = () => import('#controllers/tweets/stores_controller')
 
-//router.on('/').render('pages/home').as('home')
-//router.get('/register', [RegisterController, 'show']).as('register.show')
+// 1. La page d'accueil (Home)
+router.get('/', [RegisterController, 'showHome']).as('home')
 
-router.get('/', [RegisterController, 'showHome']).as('show.home')
+// 2. Groupe pour les invités (Non connectés)
+// start/routes.ts
+
+// start/routes.ts
 
 router
   .group(() => {
-    router.get('signup', [controllers.NewAccount, 'create'])
-    router.post('signup', [controllers.NewAccount, 'store'])
+    // Page d'affichage de l'inscription
+    router.get('signup', [controllers.NewAccount, 'create']).as('auth.register.show')
 
-    router.get('login', [controllers.Session, 'create'])
-    router.post('login', [controllers.Session, 'store'])
+    // Route de soumission du formulaire d'inscription
+    router.post('signup', [controllers.NewAccount, 'store']).as('new_account.store')
+
+    // Routes de connexion
+    router.get('login', [controllers.Session, 'create']).as('auth.login.show')
+    router.post('login', [controllers.Session, 'store']).as('session.store')
+
+    router.get('/profile', [RegisterController, 'showProfile']).as('profile.show')
   })
   .use(middleware.guest())
 
+// 3. Groupe pour les connectés
 router
   .group(() => {
-    router.post('logout', [controllers.Session, 'destroy'])
+    router.post('logout', [controllers.Session, 'destroy']).as('auth.logout')
+
+    // Route pour poster un tweet
+    router.post('tweets', [TweetsStoreController, 'handle']).as('tweets.store')
   })
   .use(middleware.auth())
