@@ -7,6 +7,7 @@ export const controllers = {
   auth: {
     Registers: () => import('#controllers/auth/registers_controller'),
     StoreControllers: () => import('#controllers/auth/store_controllers'),
+    VerifyEmails: () => import('#controllers/auth/verify_emails_controller'),
   },
   NewAccount: () => import('#controllers/new_account_controller'),
   profiles: {

@@ -3,6 +3,7 @@ import { middleware } from '#start/kernel'
 import { controllers } from '#generated/controllers'
 const RegisterController = () => import('#controllers/auth/registers_controller')
 const TweetsStoreController = () => import('#controllers/tweets/stores_controller')
+const VerifyEmailsController = () => import('#controllers/auth/verify_emails_controller')
 
 // 1. La page d'accueil (Home)
 router.get('/', [RegisterController, 'showHome']).as('home')
@@ -12,8 +13,16 @@ router
     // Page d'affichage de l'inscription
     router.get('signup', [controllers.NewAccount, 'create']).as('auth.register.show')
 
-    // Route de soumission du formulaire d'inscription
+    // Route de soumission du formulaire d'inscription (Stockage Infos + Envoi mail)
     router.post('signup', [controllers.NewAccount, 'store']).as('new_account.store')
+
+    // Routes de vérification OTP
+    router.get('signup/verify', [controllers.NewAccount, 'verifyShow']).as('auth.verify_otp.show')
+    router.post('signup/verify', [controllers.NewAccount, 'verifyStore']).as('auth.verify_otp.store')
+
+    // Routes de création de mot de passe finaux
+    router.get('signup/password', [controllers.NewAccount, 'passwordShow']).as('auth.create_password.show')
+    router.post('signup/password', [controllers.NewAccount, 'passwordStore']).as('auth.create_password.store')
 
     // Routes de connexion
     router.get('login', [controllers.Session, 'create']).as('auth.login.show')
@@ -48,3 +57,5 @@ router
   .use(middleware.auth())
 
 router.get('/profile/:id', [RegisterController, 'showUserProfile']).as('profile.user.show')
+
+router.get('/verify-email/:email', [VerifyEmailsController, 'handle']).as('verifyEmail')

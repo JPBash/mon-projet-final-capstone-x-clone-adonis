@@ -25,4 +25,23 @@ export default await Env.create(new URL('../', import.meta.url), {
   // Session
   SESSION_DRIVER: Env.schema.enum(['cookie', 'memory', 'database'] as const),
   DB_PASSWORD: Env.schema.string(),
+
+  /*
+  |----------------------------------------------------------
+  | Variables for configuring the mail package
+  |----------------------------------------------------------
+  */
+  MAIL_MAILER: Env.schema.enum(['smtp', 'ses', 'mailgun', 'sparkpost', 'resend', 'brevo'] as const),
+  MAIL_FROM_NAME: Env.schema.string(),
+  MAIL_FROM_ADDRESS: Env.schema.string(),
+  SMTP_HOST: Env.schema.string(),
+  SMTP_PORT: Env.schema.number(),
+  AWS_ACCESS_KEY_ID: Env.schema.string.optional(),
+  AWS_SECRET_ACCESS_KEY: Env.schema.string.optional(),
+  AWS_REGION: Env.schema.string.optional(),
+  MAILGUN_API_KEY: Env.schema.string.optional(),
+  MAILGUN_DOMAIN: Env.schema.string.optional(),
+  SPARKPOST_API_KEY: Env.schema.string.optional(),
+  RESEND_API_KEY: Env.schema.string.optional(),
+  BREVO_API_KEY: Env.schema.string.optional()
 })

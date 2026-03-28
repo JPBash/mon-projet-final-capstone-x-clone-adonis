@@ -49,7 +49,7 @@ export class TweetSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = ['id', 'fullName', 'email', 'password', 'createdAt', 'updatedAt', 'avatarUrl', 'coverUrl', 'bio'] as const
+  static $columns = ['id', 'fullName', 'email', 'password', 'createdAt', 'updatedAt', 'avatarUrl', 'coverUrl', 'bio', 'isEmailVerified'] as const
   $columns = UserSchema.$columns
   @column({ isPrimary: true })
   declare id: number
@@ -69,4 +69,6 @@ export class UserSchema extends BaseModel {
   declare coverUrl: string | null
   @column()
   declare bio: string | null
+  @column()
+  declare isEmailVerified: boolean
 }

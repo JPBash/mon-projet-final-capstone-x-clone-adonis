@@ -10,9 +10,7 @@
     @stack('dumper')
   </head>
   <body>
-    @include('partials/header')
     <main>
-      @include('partials/flash_alerts')
       {{{ await $slots.main() }}}
     </main>
   </body>

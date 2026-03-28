@@ -21,6 +21,7 @@ export default class SessionController {
     const { email, password } = request.all()
     const user = await User.verifyCredentials(email, password)
 
+    // Enlevé la vérification bloquante car le compte n'est créé qu'à la fin de l'OTP
     await auth.use('web').login(user)
     response.redirect().toRoute('home')
   }

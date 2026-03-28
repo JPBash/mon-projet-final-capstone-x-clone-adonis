@@ -4,6 +4,9 @@ import { type HttpContext } from '@adonisjs/core/http'
 import app from '@adonisjs/core/services/app'
 import { randomUUID } from 'node:crypto'
 
+import VerifyEmailNotification from '#mails/verify_email_notification'
+import mail from '@adonisjs/mail/services/main'
+
 export default class RegisterController {
   async show({ view }: HttpContext) {
     return view.render('auth/register')
@@ -37,7 +40,9 @@ export default class RegisterController {
   async store({ request, response, auth }: HttpContext) {
     const data = request.only(['fullName', 'email', 'password'])
     const user = await User.create(data)
+    
     await auth.use('web').login(user)
+
     return response.redirect().toRoute('home')
   }
   public async showUserProfile({ params, view, auth }: HttpContext) {

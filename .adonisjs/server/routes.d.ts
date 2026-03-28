@@ -7,6 +7,10 @@ export type ScannedRoutes = {
     'home': { paramsTuple?: []; params?: {} }
     'auth.register.show': { paramsTuple?: []; params?: {} }
     'new_account.store': { paramsTuple?: []; params?: {} }
+    'auth.verify_otp.show': { paramsTuple?: []; params?: {} }
+    'auth.verify_otp.store': { paramsTuple?: []; params?: {} }
+    'auth.create_password.show': { paramsTuple?: []; params?: {} }
+    'auth.create_password.store': { paramsTuple?: []; params?: {} }
     'auth.login.show': { paramsTuple?: []; params?: {} }
     'session.store': { paramsTuple?: []; params?: {} }
     'profile.show': { paramsTuple?: []; params?: {} }
@@ -17,23 +21,32 @@ export type ScannedRoutes = {
     'tweets.like': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'profile.follow': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'profile.user.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'verifyEmail': { paramsTuple: [ParamValue]; params: {'email': ParamValue} }
   }
   GET: {
     'home': { paramsTuple?: []; params?: {} }
     'auth.register.show': { paramsTuple?: []; params?: {} }
+    'auth.verify_otp.show': { paramsTuple?: []; params?: {} }
+    'auth.create_password.show': { paramsTuple?: []; params?: {} }
     'auth.login.show': { paramsTuple?: []; params?: {} }
     'profile.show': { paramsTuple?: []; params?: {} }
     'profile.user.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'verifyEmail': { paramsTuple: [ParamValue]; params: {'email': ParamValue} }
   }
   HEAD: {
     'home': { paramsTuple?: []; params?: {} }
     'auth.register.show': { paramsTuple?: []; params?: {} }
+    'auth.verify_otp.show': { paramsTuple?: []; params?: {} }
+    'auth.create_password.show': { paramsTuple?: []; params?: {} }
     'auth.login.show': { paramsTuple?: []; params?: {} }
     'profile.show': { paramsTuple?: []; params?: {} }
     'profile.user.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'verifyEmail': { paramsTuple: [ParamValue]; params: {'email': ParamValue} }
   }
   POST: {
     'new_account.store': { paramsTuple?: []; params?: {} }
+    'auth.verify_otp.store': { paramsTuple?: []; params?: {} }
+    'auth.create_password.store': { paramsTuple?: []; params?: {} }
     'session.store': { paramsTuple?: []; params?: {} }
     'profile.update': { paramsTuple?: []; params?: {} }
     'auth.logout': { paramsTuple?: []; params?: {} }

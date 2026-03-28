@@ -1,0 +1,26 @@
+
+  <div class="form-container">
+    <div>
+      <h1> Vérification de votre E-mail </h1>
+      <p>
+        Entrez le code à 4 chiffres que vous avez reçu sur <strong>{{ email }}</strong>
+      </p>
+    </div>
+
+    <div>
+      @form({ route: 'auth.verify_otp.store', method: 'POST' })
+        <div>
+          @field.root({ name: 'code' })
+            @!field.label({ text: 'Code à 4 chiffres' })
+            @!input.control({ type: 'text', maxlength: '4', autocomplete: 'off' })
+            @!field.error()
+          @end
+        </div>
+
+        <div>
+          @!button({ text: 'Vérifier', type: 'submit' })
+        </div>
+      @end
+    </div>
+  </div>
+@end
