@@ -13,6 +13,10 @@ export type ScannedRoutes = {
     'auth.create_password.store': { paramsTuple?: []; params?: {} }
     'auth.login.show': { paramsTuple?: []; params?: {} }
     'session.store': { paramsTuple?: []; params?: {} }
+    'auth.forgot_password.show': { paramsTuple?: []; params?: {} }
+    'auth.forgot_password.send': { paramsTuple?: []; params?: {} }
+    'auth.reset_password.show': { paramsTuple: [ParamValue]; params: {'email': ParamValue} }
+    'auth.reset_password.store': { paramsTuple: [ParamValue]; params: {'email': ParamValue} }
     'profile.show': { paramsTuple?: []; params?: {} }
     'profile.update': { paramsTuple?: []; params?: {} }
     'auth.logout': { paramsTuple?: []; params?: {} }
@@ -29,6 +33,8 @@ export type ScannedRoutes = {
     'auth.verify_otp.show': { paramsTuple?: []; params?: {} }
     'auth.create_password.show': { paramsTuple?: []; params?: {} }
     'auth.login.show': { paramsTuple?: []; params?: {} }
+    'auth.forgot_password.show': { paramsTuple?: []; params?: {} }
+    'auth.reset_password.show': { paramsTuple: [ParamValue]; params: {'email': ParamValue} }
     'profile.show': { paramsTuple?: []; params?: {} }
     'profile.user.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'verifyEmail': { paramsTuple: [ParamValue]; params: {'email': ParamValue} }
@@ -39,6 +45,8 @@ export type ScannedRoutes = {
     'auth.verify_otp.show': { paramsTuple?: []; params?: {} }
     'auth.create_password.show': { paramsTuple?: []; params?: {} }
     'auth.login.show': { paramsTuple?: []; params?: {} }
+    'auth.forgot_password.show': { paramsTuple?: []; params?: {} }
+    'auth.reset_password.show': { paramsTuple: [ParamValue]; params: {'email': ParamValue} }
     'profile.show': { paramsTuple?: []; params?: {} }
     'profile.user.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'verifyEmail': { paramsTuple: [ParamValue]; params: {'email': ParamValue} }
@@ -48,6 +56,8 @@ export type ScannedRoutes = {
     'auth.verify_otp.store': { paramsTuple?: []; params?: {} }
     'auth.create_password.store': { paramsTuple?: []; params?: {} }
     'session.store': { paramsTuple?: []; params?: {} }
+    'auth.forgot_password.send': { paramsTuple?: []; params?: {} }
+    'auth.reset_password.store': { paramsTuple: [ParamValue]; params: {'email': ParamValue} }
     'profile.update': { paramsTuple?: []; params?: {} }
     'auth.logout': { paramsTuple?: []; params?: {} }
     'tweets.store': { paramsTuple?: []; params?: {} }

@@ -19,4 +19,5 @@ export const controllers = {
     Likes: () => import('#controllers/tweets/likes_controller'),
     Stores: () => import('#controllers/tweets/stores_controller'),
   },
+  PasswordResets: () => import('#controllers/password_resets_controller'),
 }

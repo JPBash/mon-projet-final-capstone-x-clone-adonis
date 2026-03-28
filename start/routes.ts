@@ -27,6 +27,12 @@ router
     // Routes de connexion
     router.get('login', [controllers.Session, 'create']).as('auth.login.show')
     router.post('login', [controllers.Session, 'store']).as('session.store')
+
+    // Routes Mot de Passe Oublié
+    router.get('forgot-password', '#controllers/password_resets_controller.showForgot').as('auth.forgot_password.show')
+    router.post('forgot-password', '#controllers/password_resets_controller.sendLink').as('auth.forgot_password.send')
+    router.get('reset-password/:email', '#controllers/password_resets_controller.showReset').as('auth.reset_password.show')
+    router.post('reset-password/:email', '#controllers/password_resets_controller.storeReset').as('auth.reset_password.store')
   })
   .use(middleware.guest())
 //  Groupe pour les connectés
