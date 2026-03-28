@@ -46,3 +46,5 @@ router
   .post('/profile/:id/follow', '#controllers/profiles/follows_controller.handle')
   .as('profile.follow')
   .use(middleware.auth())
+
+router.get('/profile/:id', [RegisterController, 'showUserProfile']).as('profile.user.show')

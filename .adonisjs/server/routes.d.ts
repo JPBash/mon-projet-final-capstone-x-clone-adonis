@@ -16,18 +16,21 @@ export type ScannedRoutes = {
     'tweets.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'tweets.like': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'profile.follow': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'profile.user.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   GET: {
     'home': { paramsTuple?: []; params?: {} }
     'auth.register.show': { paramsTuple?: []; params?: {} }
     'auth.login.show': { paramsTuple?: []; params?: {} }
     'profile.show': { paramsTuple?: []; params?: {} }
+    'profile.user.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   HEAD: {
     'home': { paramsTuple?: []; params?: {} }
     'auth.register.show': { paramsTuple?: []; params?: {} }
     'auth.login.show': { paramsTuple?: []; params?: {} }
     'profile.show': { paramsTuple?: []; params?: {} }
+    'profile.user.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
   POST: {
     'new_account.store': { paramsTuple?: []; params?: {} }

@@ -90,17 +90,23 @@
                 @each(tweet in tweets)
                   <div class="tweet">
                     <div class="avatar">
-                      @if(tweet.user.avatarUrl)
-                        <img src="{{ tweet.user.avatarUrl }}" alt="Avatar de {{ tweet.user.fullName }}">
-                      @else
-                        <div class="avatar-placeholder">{{ tweet.user.fullName.charAt(0) }}</div>
-                      @endif
+                      {{-- LIEN SUR L'AVATAR --}}
+                      <a href="{{ route('profile.user.show', { id: tweet.user.id }) }}" style="text-decoration: none;">
+                        @if(tweet.user.avatarUrl)
+                          <img src="{{ tweet.user.avatarUrl }}" alt="Avatar de {{ tweet.user.fullName }}">
+                        @else
+                          <div class="avatar-placeholder">{{ tweet.user.fullName.charAt(0) }}</div>
+                        @endif
+                      </a>
                     </div>
 
                     <div class="tweet-content">
                       <div style="display: flex; justify-content: space-between;">
                         <div>
-                          <strong>{{ tweet.user.fullName }}</strong>
+                          {{-- LIEN SUR LE NOM COMPLET --}}
+                          <a href="{{ route('profile.user.show', { id: tweet.user.id }) }}" style="text-decoration: none; color: inherit;">
+                            <strong class="hover-underline">{{ tweet.user.fullName }}</strong>
+                          </a>
                           <span class="muted">{{ tweet.user.email }}</span>
                         </div>
 
@@ -153,6 +159,20 @@
                 </ul>
               </section>
             </aside>
+          </div>
+        @else
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; width: 100%; gap: 20px;">
+            <div class="brand" style="font-size: 80px; margin-bottom: 20px;">X</div>
+            <h1 style="font-size: 3rem; font-weight: 800;">Ça se passe maintenant</h1>
+            <h2 style="font-size: 2rem; margin-bottom: 20px;">Inscrivez-vous.</h2>
+            <a href="{{ route('auth.register.show') }}" class="btn btn-primary" style="width: 300px;">Créer un compte</a>
+            <div style="display: flex; align-items: center; gap: 10px; width: 300px; margin: 10px 0;">
+                <hr style="flex: 1; border-color: var(--border-color);">
+                <span>ou</span>
+                <hr style="flex: 1; border-color: var(--border-color);">
+            </div>
+            <p>Déjà un compte ?</p>
+            <a href="{{ route('auth.login.show') }}" class="btn btn-outline" style="width: 300px;">Se connecter</a>
           </div>
         @endif
 

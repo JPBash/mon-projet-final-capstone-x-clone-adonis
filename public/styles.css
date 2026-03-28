@@ -45,7 +45,7 @@ ul {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 9999px; /* Pill shape */
+  border-radius: 9999px; 
   font-weight: 700;
   padding: 0 16px;
   height: 36px;
@@ -55,8 +55,13 @@ ul {
 }
 
 .btn-primary {
-  background-color: var(--twitter-blue);
-  color: #fff;
+  background-color: #1d9bf0; 
+  color: white;
+  padding: 12px 24px;
+  border-radius: 9999px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
 }
 
 .btn-primary:hover {
@@ -65,8 +70,13 @@ ul {
 
 .btn-outline {
   background-color: transparent;
-  border: 1px solid rgba(231, 233, 234, 0.5);
-  color: var(--main-text);
+  border: 1px solid #536471;
+  color: #1d9bf0;
+  padding: 12px 24px;
+  border-radius: 9999px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
 }
 
 .btn-outline:hover {

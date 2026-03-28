@@ -40,7 +40,31 @@ export default class RegisterController {
     await auth.use('web').login(user)
     return response.redirect().toRoute('home')
   }
+  public async showUserProfile({ params, view, auth }: HttpContext) {
+    const user = await User.query()
+      .where('id', params.id)
+      .withCount('tweets')
+      .withCount('followers')
+      .withCount('following')
+      .firstOrFail()
 
+    const tweets = await user.related('tweets')
+      .query()
+      .preload('user')
+      .withCount('likes')
+      .orderBy('createdAt', 'desc')
+
+    let isFollowing = false
+    if (auth.user) {
+      const follow = await auth.user.related('following')
+        .query()
+        .where('following_id', user.id)
+        .first()
+      isFollowing = !!follow
+    }
+
+    return view.render('pages/profile', { user, tweets, isFollowing })
+  }
   public async showProfile({ view, auth }: HttpContext) {
     const user = auth.user!
 
