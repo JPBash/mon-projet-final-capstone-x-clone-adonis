@@ -39,9 +39,9 @@
 
         {{-- RIGHT PANEL --}}
         <aside class="right-panel">
-            <div class="search-box">
-                <input type="text" placeholder="Chercher" />
-            </div>
+            <form action="{{ route('tweets.search') }}" method="GET" class="search-box">
+                <input type="text" name="q" placeholder="Chercher" value="{{ query || '' }}" />
+            </form>
             <div class="card"><h3>Ce qui se passe</h3></div>
         </aside>
     </div>

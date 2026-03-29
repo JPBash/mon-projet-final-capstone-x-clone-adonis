@@ -4,6 +4,7 @@ import { controllers } from '#generated/controllers'
 const RegisterController = () => import('#controllers/auth/registers_controller')
 const TweetsStoreController = () => import('#controllers/tweets/stores_controller')
 const VerifyEmailsController = () => import('#controllers/auth/verify_emails_controller')
+const SearchesController = () => import('#controllers/tweets/searches_controller')
 
 // 1. La page d'accueil (Home)
 router.get('/', [RegisterController, 'showHome']).as('home')
@@ -74,3 +75,6 @@ router.get('/profile/:id/followers', [RegisterController, 'showFollowers']).as('
 router.get('/profile/:id/following', [RegisterController, 'showFollowing']).as('profile.following')
 
 router.get('/verify-email/:email', [VerifyEmailsController, 'handle']).as('verifyEmail')
+
+router.get('/search', [SearchesController, 'index']).as('tweets.search')
+router.get('/hashtag/:name', [SearchesController, 'hashtag']).as('tweets.hashtag')

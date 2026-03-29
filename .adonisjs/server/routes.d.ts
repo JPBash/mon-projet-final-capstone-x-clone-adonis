@@ -30,6 +30,8 @@ export type ScannedRoutes = {
     'profile.followers': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'profile.following': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'verifyEmail': { paramsTuple: [ParamValue]; params: {'email': ParamValue} }
+    'tweets.search': { paramsTuple?: []; params?: {} }
+    'tweets.hashtag': { paramsTuple: [ParamValue]; params: {'name': ParamValue} }
   }
   GET: {
     'home': { paramsTuple?: []; params?: {} }
@@ -45,6 +47,8 @@ export type ScannedRoutes = {
     'profile.followers': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'profile.following': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'verifyEmail': { paramsTuple: [ParamValue]; params: {'email': ParamValue} }
+    'tweets.search': { paramsTuple?: []; params?: {} }
+    'tweets.hashtag': { paramsTuple: [ParamValue]; params: {'name': ParamValue} }
   }
   HEAD: {
     'home': { paramsTuple?: []; params?: {} }
@@ -60,6 +64,8 @@ export type ScannedRoutes = {
     'profile.followers': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'profile.following': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'verifyEmail': { paramsTuple: [ParamValue]; params: {'email': ParamValue} }
+    'tweets.search': { paramsTuple?: []; params?: {} }
+    'tweets.hashtag': { paramsTuple: [ParamValue]; params: {'name': ParamValue} }
   }
   POST: {
     'new_account.store': { paramsTuple?: []; params?: {} }

@@ -20,6 +20,34 @@ export class FollowSchema extends BaseModel {
   declare createdAt: DateTime | null
 }
 
+export class HashtagTweetSchema extends BaseModel {
+  static $columns = ['id', 'hashtagId', 'tweetId', 'createdAt', 'updatedAt'] as const
+  $columns = HashtagTweetSchema.$columns
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare hashtagId: number | null
+  @column()
+  declare tweetId: number | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
+export class HashtagSchema extends BaseModel {
+  static $columns = ['id', 'name', 'createdAt', 'updatedAt'] as const
+  $columns = HashtagSchema.$columns
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare name: string
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
 export class LikeSchema extends BaseModel {
   static $columns = ['id', 'userId', 'tweetId', 'createdAt'] as const
   $columns = LikeSchema.$columns

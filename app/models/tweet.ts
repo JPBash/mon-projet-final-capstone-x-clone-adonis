@@ -1,8 +1,9 @@
+import { BaseModel, column, belongsTo, hasMany, manyToMany } from '@adonisjs/lucid/orm'
+import type { BelongsTo, HasMany, ManyToMany } from '@adonisjs/lucid/types/relations'
 import { DateTime } from 'luxon'
-import { BaseModel, column, belongsTo, hasMany } from '@adonisjs/lucid/orm'
-import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
 import User from '#models/user'
 import Like from '#models/like'
+import Hashtag from '#models/hashtag'
 
 
 export default class Tweet extends BaseModel {
@@ -44,4 +45,9 @@ export default class Tweet extends BaseModel {
 
   @hasMany(() => Tweet, { foreignKey: 'retweetId' })
   declare retweets: HasMany<typeof Tweet>
+
+  @manyToMany(() => Hashtag, {
+    pivotTable: 'hashtag_tweets',
+  })
+  declare hashtags: ManyToMany<typeof Hashtag>
 }

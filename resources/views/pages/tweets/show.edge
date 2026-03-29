@@ -78,7 +78,7 @@
                           <span class="muted">{{ tweet.parent.user.email }}</span>
                         </div>
                       </div>
-                      <p>{{ tweet.parent.content }}</p>
+                      <p>{{{ tweet.parent.content ? tweet.parent.content.replace(/#(\w+)/g, '<a href="/hashtag/$1" class="hashtag-link">#$1</a>') : '' }}}</p>
                       <div class="tweet-footer" style="margin-bottom: 12px;">
                         <span class="muted">En réponse à un post</span>
                       </div>
@@ -103,7 +103,9 @@
                             <span class="muted">{{ tweet.user.email }}</span>
                         </div>
                         
-                        <p class="tweet-detail-content">{{ tweet.content }}</p>
+                        <p class="tweet-detail-content">
+                            {{{ tweet.content ? tweet.content.replace(/#(\w+)/g, '<a href="/hashtag/$1" class="hashtag-link">#$1</a>') : '' }}}
+                        </p>
 
                         <div style="padding: 12px 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); color: var(--muted-text); font-size: 15px;">
                             {{ tweet.createdAt.toFormat('HH:mm · d LLL yyyy') }}
@@ -182,7 +184,7 @@
                         <strong>{{ reply.user.fullName }}</strong>
                         <span class="muted">{{ reply.user.email }}</span>
                       </div>
-                      <p>{{ reply.content }}</p>
+                      <p>{{{ reply.content ? reply.content.replace(/#(\w+)/g, '<a href="/hashtag/$1" class="hashtag-link">#$1</a>') : '' }}}</p>
                       
                       <div class="tweet-footer">
                         <form action="{{ route('tweets.like', { id: reply.id }) }}" method="POST">
@@ -202,9 +204,9 @@
 
             {{-- Panel Droit --}}
             <aside class="right-panel">
-              <div class="search-box">
-                <input type="text" placeholder="Chercher" />
-              </div>
+              <form action="{{ route('tweets.search') }}" method="GET" class="search-box">
+                <input type="text" name="q" placeholder="Chercher" />
+              </form>
               <section class="card">
                 <h3>Ce qui se passe</h3>
                 <ul class="simple-list">

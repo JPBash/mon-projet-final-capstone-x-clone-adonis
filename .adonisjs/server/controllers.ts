@@ -20,6 +20,7 @@ export const controllers = {
     Stores: () => import('#controllers/tweets/stores_controller'),
     Shows: () => import('#controllers/tweets/shows_controller'),
     Retweets: () => import('#controllers/tweets/retweets_controller'),
+    Searches: () => import('#controllers/tweets/searches_controller'),
   },
   PasswordResets: () => import('#controllers/password_resets_controller'),
 }

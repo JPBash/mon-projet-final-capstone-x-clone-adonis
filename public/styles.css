@@ -501,3 +501,35 @@ input[type="file"] {
     align-items: center;
     width: 48px;
 }
+
+/* ==========================================================================
+   11. RECHERCHE & RÉSULTATS
+   ========================================================================== */
+.search-tabs {
+  background-color: var(--bg-color);
+  position: sticky;
+  top: 0; 
+  z-index: 5;
+}
+
+.search-tab.active {
+  font-weight: 700;
+}
+
+.user-card:hover {
+  background-color: var(--bg-hover);
+  cursor: pointer;
+}
+
+.hashtag-link {
+  color: var(--twitter-blue);
+  text-decoration: none;
+}
+
+.hashtag-link:hover {
+  text-decoration: underline;
+}
+
+.tab-content {
+    margin-top: 10px;
+}

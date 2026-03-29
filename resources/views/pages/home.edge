@@ -126,7 +126,9 @@
                       </div>
 
                       <a href="{{ route('tweets.show', { id: displayTweet.id }) }}" style="text-decoration: none; color: inherit;">
-                        <p style="margin-top: 5px; font-size: 15px; line-height: 1.4;">{{ displayTweet.content || '' }}</p>
+                        <p style="margin-top: 5px; font-size: 15px; line-height: 1.4;">
+                          {{{ displayTweet.content ? displayTweet.content.replace(/#(\w+)/g, '<a href="/hashtag/$1" class="hashtag-link">#$1</a>') : '' }}}
+                        </p>
                       </a>
 
                       <div class="tweet-footer">

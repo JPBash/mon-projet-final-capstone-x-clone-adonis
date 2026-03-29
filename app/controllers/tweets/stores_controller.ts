@@ -1,4 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
+import Hashtag from '#models/hashtag'
 
 export default class StoreController {
   public async handle({ auth, request, response }: HttpContext) {
@@ -11,12 +12,24 @@ export default class StoreController {
     }
 
     // 2. On crée le tweet lié à l'utilisateur
-    await auth.user.related('tweets').create({
+    const tweet = await auth.user.related('tweets').create({
       content: content,
       parentId: parentId || null
     })
 
-    // 3. On revient à l'accueil
+    // 3. Extraction et liaison des hashtags
+    const hashtags = content.match(/#(\w+)/g)
+    if (hashtags) {
+      const hashtagIds: number[] = []
+      for (const tag of hashtags) {
+        const tagName = tag.substring(1).toLowerCase()
+        const hashtag = await Hashtag.firstOrCreate({ name: tagName })
+        hashtagIds.push(hashtag.id)
+      }
+      await tweet.related('hashtags').sync(hashtagIds)
+    }
+
+    // 4. On revient à l'accueil
     return response.redirect().toPath('/')
   }
 }
