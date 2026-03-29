@@ -22,10 +22,13 @@ export type ScannedRoutes = {
     'auth.logout': { paramsTuple?: []; params?: {} }
     'tweets.store': { paramsTuple?: []; params?: {} }
     'tweets.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'tweets.retweet': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'tweets.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'tweets.like': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'profile.follow': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'profile.user.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'profile.followers': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'profile.following': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'verifyEmail': { paramsTuple: [ParamValue]; params: {'email': ParamValue} }
   }
   GET: {
@@ -39,6 +42,8 @@ export type ScannedRoutes = {
     'profile.show': { paramsTuple?: []; params?: {} }
     'tweets.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'profile.user.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'profile.followers': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'profile.following': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'verifyEmail': { paramsTuple: [ParamValue]; params: {'email': ParamValue} }
   }
   HEAD: {
@@ -52,6 +57,8 @@ export type ScannedRoutes = {
     'profile.show': { paramsTuple?: []; params?: {} }
     'tweets.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'profile.user.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'profile.followers': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'profile.following': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'verifyEmail': { paramsTuple: [ParamValue]; params: {'email': ParamValue} }
   }
   POST: {
@@ -64,6 +71,7 @@ export type ScannedRoutes = {
     'profile.update': { paramsTuple?: []; params?: {} }
     'auth.logout': { paramsTuple?: []; params?: {} }
     'tweets.store': { paramsTuple?: []; params?: {} }
+    'tweets.retweet': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'tweets.like': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'profile.follow': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }

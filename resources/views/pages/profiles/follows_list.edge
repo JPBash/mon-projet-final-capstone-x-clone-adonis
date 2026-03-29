@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ title }} - {{ user.fullName }}</title>
+    <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+    <main id="app" class="app-shell">
+        @if(auth.user)
+          <div class="layout">
+            {{-- Sidebar --}}
+            <aside class="sidebar">
+              <div class="brand">X</div>
+              <nav class="nav-menu">
+                <a href="{{ route('home') }}" class="nav-link">Accueil</a>
+                <button class="nav-link">Explorer</button>
+                <button class="nav-link">Notifications</button>
+                <button class="nav-link" onclick="window.open('https://x.com/i/grok', '_blank')">Grok</button>
+                <button class="nav-link">Paramètres</button>
+                <button class="nav-link">Messages</button>
+                <a href="{{ route('profile.show') }}" class="nav-link">Profil</a>
+              </nav>
+
+              <div class="user-chip">
+                <div class="avatar">
+                  @if(auth.user.avatarUrl)
+                    <img src="{{ auth.user.avatarUrl }}" alt="Avatar">
+                  @else
+                    <div class="avatar-placeholder">{{ auth.user.fullName.charAt(0) }}</div>
+                  @endif
+                </div>
+                <div>
+                  <p><strong>{{ auth.user.fullName }}</strong></p>
+                  <p class="muted">{{ auth.user.email }}</p>
+                </div>
+              </div>
+            </aside>
+
+            {{-- Flux Principal --}}
+            <section class="feed-panel">
+              <header class="feed-header" style="display: flex; align-items: center; gap: 20px;">
+                <a href="javascript:history.back()" style="padding-left: 15px; font-size: 1.2rem;">←</a>
+                <div>
+                  <h2 style="padding: 12px 0;">{{ title }}</h2>
+                </div>
+              </header>
+
+              <div class="user-list">
+                @each(item in users)
+                  <div class="tweet" style="align-items: center; justify-content: space-between;">
+                    <div style="display: flex; gap: 12px; align-items: center;">
+                        <div class="avatar">
+                            <a href="{{ route('profile.user.show', { id: item.id }) }}">
+                                @if(item.avatarUrl)
+                                    <img src="{{ item.avatarUrl }}" alt="Avatar">
+                                @else
+                                    <div class="avatar-placeholder">{{ item.fullName.charAt(0) }}</div>
+                                @endif
+                            </a>
+                        </div>
+                        <div>
+                            <p><strong>{{ item.fullName }}</strong></p>
+                            <p class="muted">{{ item.email }}</p>
+                        </div>
+                    </div>
+                    
+                    @if(auth.user.id !== item.id)
+                        <form action="{{ route('profile.follow', { id: item.id }) }}" method="POST">
+                            {{ csrfField() }}
+                            <button type="submit" class="btn btn-outline" style="height: 32px; font-size: 14px;">
+                                Suivre
+                            </button>
+                        </form>
+                    @endif
+                  </div>
+                @else
+                  <div style="padding: 40px; text-align: center; color: var(--muted-text);">
+                    Aucun utilisateur trouvé.
+                  </div>
+                @endeach
+              </div>
+            </section>
+
+            {{-- Panel Droit --}}
+            <aside class="right-panel">
+              <div class="search-box">
+                <input type="text" placeholder="Chercher" />
+              </div>
+            </aside>
+          </div>
+        @endif
+    </main>
+</body>
+</html>

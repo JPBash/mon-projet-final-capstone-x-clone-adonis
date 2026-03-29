@@ -80,8 +80,12 @@
                 @endif
 
                 <div class="stats">
-                  <span><strong>0</strong> Abonnements</span>
-                  <span><strong>0</strong> Abonnés</span>
+                  <a href="{{ route('profile.following', { id: user.id }) }}">
+                    <strong>{{ user.$extras.following_count || '0' }}</strong> Abonnements
+                  </a>
+                  <a href="{{ route('profile.followers', { id: user.id }) }}">
+                    <strong>{{ user.$extras.followers_count || '0' }}</strong> Abonnés
+                  </a>
                 </div>
               </div>
 
@@ -109,18 +113,58 @@
               {{-- Liste des Tweets de l'utilisateur --}}
               <div class="tweet-list">
                 @each(tweet in tweets)
+                  {{-- Indicateur de retweet --}}
+                  @if(tweet.retweetId)
+                    <div style="padding: 4px 16px 0 52px; font-size: 13px; color: var(--muted-text); font-weight: 700;">
+                        🔁 {{ user.fullName }} a retweeté
+                    </div>
+                  @endif
+
                   <div class="tweet">
                     <div class="avatar">
-                      @if(auth.user.avatarUrl)
-                        <img src="{{ auth.user.avatarUrl }}" alt="Avatar">
-                      @else
-                        <div class="avatar-placeholder">{{ auth.user.fullName.charAt(0) }}</div>
-                      @endif
+                      @assign(displayTweet = tweet.retweet || tweet)
+                      <a href="{{ route('profile.user.show', { id: displayTweet.user.id }) }}">
+                        @if(displayTweet.user.avatarUrl)
+                          <img src="{{ displayTweet.user.avatarUrl }}" alt="Avatar">
+                        @else
+                          <div class="avatar-placeholder">{{ displayTweet.user.fullName.charAt(0) }}</div>
+                        @endif
+                      </a>
                     </div>
                     <div class="tweet-content">
-                      <strong>{{ auth.user.fullName }}</strong>
-                      <span class="muted">{{ auth.user.email }}</span>
-                      <p>{{ tweet.content }}</p>
+                      <div>
+                        <strong>{{ displayTweet.user.fullName }}</strong>
+                        <span class="muted">{{ displayTweet.user.email }}</span>
+                      </div>
+                      
+                      <a href="{{ route('tweets.show', { id: displayTweet.id }) }}" style="text-decoration: none; color: inherit;">
+                        <p>{{ displayTweet.content || '' }}</p>
+                      </a>
+
+                      <div class="tweet-footer">
+                        <a href="{{ route('tweets.show', { id: displayTweet.id }) }}" class="tweet-action">
+                            💬 <span>{{ displayTweet.$extras.replies_count || 0 }}</span>
+                        </a>
+
+                        <form action="{{ route('tweets.retweet', { id: displayTweet.id }) }}" method="POST">
+                          {{ csrfField() }}
+                          <button type="submit" class="tweet-action" style="color: {{ (displayTweet.retweets && displayTweet.retweets.some(r => r.userId === auth.user.id)) ? '#00ba7c' : '' }}">
+                             🔁 <span>{{ displayTweet.$extras.retweets_count || 0 }}</span>
+                          </button>
+                        </form>
+
+                        <form action="{{ route('tweets.like', { id: displayTweet.id }) }}" method="POST">
+                          {{ csrfField() }}
+                          <button type="submit" class="tweet-action tweet-action-like" style="color: {{ (displayTweet.likes && displayTweet.likes.some(l => l.userId === auth.user.id)) ? '#f91880' : '' }}">
+                            @if(displayTweet.likes && displayTweet.likes.some(l => l.userId === auth.user.id))
+                              ❤️
+                            @else
+                              🤍
+                            @endif
+                            <span>{{ displayTweet.$extras.likes_count || 0 }}</span>
+                          </button>
+                        </form>
+                      </div>
                     </div>
                   </div>
                 @endeach

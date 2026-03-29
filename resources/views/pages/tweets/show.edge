@@ -120,11 +120,20 @@
 
                         {{-- Actions bar --}}
                         <div class="tweet-footer" style="justify-content: space-around; padding: 4px 0;">
-                             <button class="tweet-action">💬</button>
+                             <a href="{{ route('tweets.show', { id: tweet.id }) }}" class="tweet-action">💬 <span>{{ tweet.$extras.replies_count || 0 }}</span></a>
+                             
+                             <form action="{{ route('tweets.retweet', { id: tweet.id }) }}" method="POST">
+                                {{ csrfField() }}
+                                <button type="submit" class="tweet-action" style="color: {{ (tweet.retweets && tweet.retweets.some(r => r.userId === auth.user.id)) ? '#00ba7c' : '' }}">
+                                    🔁 <span>{{ tweet.$extras.retweets_count || 0 }}</span>
+                                </button>
+                             </form>
+
                              <form action="{{ route('tweets.like', { id: tweet.id }) }}" method="POST">
                                 {{ csrfField() }}
-                                <button type="submit" class="tweet-action">
+                                <button type="submit" class="tweet-action" style="color: {{ (tweet.likes && tweet.likes.some(l => l.userId === auth.user.id)) ? '#f91880' : '' }}">
                                     {{ (tweet.likes && tweet.likes.some(l => l.userId === auth.user.id)) ? '❤️' : '🤍' }}
+                                    <span>{{ tweet.$extras.likes_count || 0 }}</span>
                                 </button>
                              </form>
                              @if(tweet.userId == auth.user.id)

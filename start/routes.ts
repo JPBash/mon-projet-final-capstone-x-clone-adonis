@@ -47,6 +47,9 @@ router
     
     // Route pour voir le détail d'un tweet et ses réponses
     router.get('tweets/:id', '#controllers/tweets/shows_controller.handle').as('tweets.show')
+
+    // Route pour retweeter
+    router.post('tweets/:id/retweet', '#controllers/tweets/retweets_controller.handle').as('tweets.retweet')
   })
   .use(middleware.auth())
 
@@ -66,5 +69,8 @@ router
   .use(middleware.auth())
 
 router.get('/profile/:id', [RegisterController, 'showUserProfile']).as('profile.user.show')
+
+router.get('/profile/:id/followers', [RegisterController, 'showFollowers']).as('profile.followers')
+router.get('/profile/:id/following', [RegisterController, 'showFollowing']).as('profile.following')
 
 router.get('/verify-email/:email', [VerifyEmailsController, 'handle']).as('verifyEmail')

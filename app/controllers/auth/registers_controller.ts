@@ -24,8 +24,10 @@ export default class RegisterController {
       .whereNull('parentId') // On n'affiche pas les réponses isolées sur l'accueil
       .preload('user')
       .preload('likes')
+      .preload('retweet', (q) => q.preload('user'))
       .withCount('likes')
       .withCount('replies')
+      .withCount('retweets')
       .orderBy('createdAt', 'desc')
 
     const tweets = await query
@@ -52,7 +54,10 @@ export default class RegisterController {
     const tweets = await user.related('tweets')
       .query()
       .preload('user')
+      .preload('retweet', (q) => q.preload('user'))
       .withCount('likes')
+      .withCount('replies')
+      .withCount('retweets')
       .orderBy('createdAt', 'desc')
 
     let isFollowing = false
@@ -76,7 +81,10 @@ export default class RegisterController {
       .where('userId', user.id)
       .preload('user')
       .preload('likes')
+      .preload('retweet', (q) => q.preload('user'))
       .withCount('likes')
+      .withCount('replies')
+      .withCount('retweets')
       .orderBy('createdAt', 'desc')
 
     return view.render('pages/profile', { user, tweets })
@@ -103,5 +111,19 @@ export default class RegisterController {
     user.bio = request.input('bio')
     await user.save()
     return response.redirect().back()
+  }
+
+  async showFollowers({ params, view }: HttpContext) {
+    const user = await User.findOrFail(params.id)
+    const followersRows = await user.related('followers').query().preload('follower')
+    const users = followersRows.map((f) => f.follower)
+    return view.render('pages/profiles/follows_list', { user, users, title: 'Abonnés' })
+  }
+
+  async showFollowing({ params, view }: HttpContext) {
+    const user = await User.findOrFail(params.id)
+    const followingRows = await user.related('following').query().preload('following')
+    const users = followingRows.map((f) => f.following)
+    return view.render('pages/profiles/follows_list', { user, users, title: 'Abonnements' })
   }
 }

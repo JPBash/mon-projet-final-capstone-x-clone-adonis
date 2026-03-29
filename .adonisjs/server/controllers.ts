@@ -10,7 +10,6 @@ export const controllers = {
     VerifyEmails: () => import('#controllers/auth/verify_emails_controller'),
   },
   NewAccount: () => import('#controllers/new_account_controller'),
-  PasswordResets: () => import('#controllers/password_resets_controller'),
   profiles: {
     Follow: () => import('#controllers/profiles/follow_controller'),
   },
@@ -18,7 +17,9 @@ export const controllers = {
   tweets: {
     Destroys: () => import('#controllers/tweets/destroys_controller'),
     Likes: () => import('#controllers/tweets/likes_controller'),
-    Shows: () => import('#controllers/tweets/shows_controller'),
     Stores: () => import('#controllers/tweets/stores_controller'),
+    Shows: () => import('#controllers/tweets/shows_controller'),
+    Retweets: () => import('#controllers/tweets/retweets_controller'),
   },
+  PasswordResets: () => import('#controllers/password_resets_controller'),
 }

@@ -34,20 +34,22 @@ export class LikeSchema extends BaseModel {
 }
 
 export class TweetSchema extends BaseModel {
-  static $columns = ['id', 'userId', 'content', 'createdAt', 'updatedAt', 'parentId'] as const
+  static $columns = ['id', 'userId', 'content', 'createdAt', 'updatedAt', 'parentId', 'retweetId'] as const
   $columns = TweetSchema.$columns
   @column({ isPrimary: true })
   declare id: number
   @column()
   declare userId: number | null
   @column()
-  declare content: string
+  declare content: string | null
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
   @column()
   declare parentId: number | null
+  @column()
+  declare retweetId: number | null
 }
 
 export class UserSchema extends BaseModel {
