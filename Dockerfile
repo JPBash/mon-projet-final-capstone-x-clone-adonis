@@ -27,4 +27,4 @@ RUN npm ci --omit=dev
 COPY --from=build /app/build .
 
 EXPOSE 3333
-CMD ["node", "bin/server.js"]
+CMD ["node", "server.js"]
