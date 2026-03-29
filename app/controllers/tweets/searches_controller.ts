@@ -5,7 +5,7 @@ import Hashtag from '#models/hashtag'
 
 export default class SearchesController {
   /**
-   * Global search for tweets and users
+   * recherche global des tweets et des utilisateurs
    */
   async index({ request, view }: HttpContext) {
     const query = request.input('q')

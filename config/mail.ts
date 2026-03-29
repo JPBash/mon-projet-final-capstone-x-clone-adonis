@@ -5,8 +5,8 @@ const mailConfig = defineConfig({
   default: 'smtp',
 
   from: {
-    address: 'j.pierrebash@gmail.com',
-    name: 'X Clone',
+    address: env.get('MAIL_FROM_ADDRESS') || 'admin@example.com',
+    name: env.get('MAIL_FROM_NAME') || 'X Clone',
   },
 
   mailers: { 
@@ -15,8 +15,8 @@ const mailConfig = defineConfig({
       port: env.get('SMTP_PORT'),
       auth: {
         type: 'login',
-        user: env.get('SMTP_USERNAME'),
-        pass: env.get('SMTP_PASSWORD'),
+        user: env.get('SMTP_USERNAME') || '',
+        pass: env.get('SMTP_PASSWORD') || '',
       },
     }),
   },
