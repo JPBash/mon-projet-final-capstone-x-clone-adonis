@@ -19,6 +19,7 @@ RUN node ace build --ignore-ts-errors
 # Stage 4: Production
 FROM node:24-alpine AS production
 ENV NODE_ENV=production
+ENV HOST=0.0.0.0
 WORKDIR /app
 
 COPY --from=build /app/package*.json ./
@@ -27,4 +28,4 @@ RUN npm ci --omit=dev
 COPY --from=build /app/build .
 
 EXPOSE 3333
-CMD ["node", "server.js"]
+CMD ["node", "bin/server.js"]
