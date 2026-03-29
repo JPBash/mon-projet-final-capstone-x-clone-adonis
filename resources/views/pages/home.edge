@@ -116,9 +116,15 @@
                         @endif
                       </div>
 
-                      <p style="margin-top: 5px;">{{ tweet.content }}</p>
+                      <a href="{{ route('tweets.show', { id: tweet.id }) }}" style="text-decoration: none; color: inherit;">
+                        <p style="margin-top: 5px; font-size: 15px; line-height: 1.4;">{{ tweet.content }}</p>
+                      </a>
 
                       <div class="tweet-footer">
+                        <a href="{{ route('tweets.show', { id: tweet.id }) }}" class="tweet-action">
+                            💬 <span>{{ tweet.$extras.replies_count || 0 }}</span>
+                        </a>
+
                         <form action="{{ route('tweets.like', { id: tweet.id }) }}" method="POST">
                           {{ csrfField() }}
                           <button type="submit" class="tweet-action tweet-action-like" style="color: {{ (tweet.likes && tweet.likes.some(l => l.userId === auth.user.id)) ? '#f91880' : '' }}">

@@ -21,6 +21,7 @@ export type ScannedRoutes = {
     'profile.update': { paramsTuple?: []; params?: {} }
     'auth.logout': { paramsTuple?: []; params?: {} }
     'tweets.store': { paramsTuple?: []; params?: {} }
+    'tweets.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'tweets.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'tweets.like': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'profile.follow': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -36,6 +37,7 @@ export type ScannedRoutes = {
     'auth.forgot_password.show': { paramsTuple?: []; params?: {} }
     'auth.reset_password.show': { paramsTuple: [ParamValue]; params: {'email': ParamValue} }
     'profile.show': { paramsTuple?: []; params?: {} }
+    'tweets.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'profile.user.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'verifyEmail': { paramsTuple: [ParamValue]; params: {'email': ParamValue} }
   }
@@ -48,6 +50,7 @@ export type ScannedRoutes = {
     'auth.forgot_password.show': { paramsTuple?: []; params?: {} }
     'auth.reset_password.show': { paramsTuple: [ParamValue]; params: {'email': ParamValue} }
     'profile.show': { paramsTuple?: []; params?: {} }
+    'tweets.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'profile.user.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'verifyEmail': { paramsTuple: [ParamValue]; params: {'email': ParamValue} }
   }

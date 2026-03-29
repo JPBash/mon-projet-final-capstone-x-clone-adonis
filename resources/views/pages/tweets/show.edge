@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clone X - Tweet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+    <main id="app" class="app-shell">
+        @if(auth.user)
+          <div class="layout">
+            {{-- Sidebar --}}
+            <aside class="sidebar">
+              <div class="brand">X</div>
+              <nav class="nav-menu">
+                <a href="{{ route('home') }}" class="nav-link">Accueil</a>
+                <button class="nav-link">Explorer</button>
+                <button class="nav-link">Notifications</button>
+                <button class="nav-link" onclick="window.open('https://x.com/i/grok', '_blank')">Grok</button>
+                <button class="nav-link">Paramètres</button>
+                <button class="nav-link">Messages</button>
+                <a href="{{ route('profile.show') }}" class="nav-link">Profil</a>
+              </nav>
+
+              <div class="user-chip">
+                <div class="avatar">
+                  @if(auth.user.avatarUrl)
+                    <img src="{{ auth.user.avatarUrl }}" alt="Avatar">
+                  @else
+                    <div class="avatar-placeholder">{{ auth.user.fullName.charAt(0) }}</div>
+                  @endif
+                </div>
+                <div>
+                  <p><strong>{{ auth.user.fullName }}</strong></p>
+                  <p class="muted">{{ auth.user.email }}</p>
+                </div>
+              </div>
+
+              <form action="{{ route('auth.logout') }}" method="POST">
+                {{ csrfField() }}
+                <button type="submit" class="btn btn-outline" style="width: 100%; margin-top: 10px;">Se déconnecter</button>
+              </form>
+            </aside>
+
+            {{-- Flux Principal --}}
+            <section class="feed-panel">
+              <header class="feed-header">
+                <div style="display: flex; align-items: center; padding: 0 16px;">
+                    <a href="javascript:history.back()" style="margin-right: 20px; font-size: 20px;">←</a>
+                    <h2 style="padding: 12px 0;">Post</h2>
+                </div>
+              </header>
+
+              <div class="tweet-list">
+                {{-- Affichage du parent s'il existe --}}
+                @if(tweet.parent)
+                  <div class="tweet tweet-parent">
+                    <div class="tweet-connector-wrap">
+                        <div class="avatar">
+                            <a href="{{ route('profile.user.show', { id: tweet.parent.user.id }) }}">
+                                @if(tweet.parent.user.avatarUrl)
+                                    <img src="{{ tweet.parent.user.avatarUrl }}" alt="Avatar">
+                                @else
+                                    <div class="avatar-placeholder">{{ tweet.parent.user.fullName.charAt(0) }}</div>
+                                @endif
+                            </a>
+                        </div>
+                        <div class="reply-line"></div>
+                    </div>
+                    <div class="tweet-content">
+                      <div style="display: flex; justify-content: space-between;">
+                        <div>
+                          <strong>{{ tweet.parent.user.fullName }}</strong>
+                          <span class="muted">{{ tweet.parent.user.email }}</span>
+                        </div>
+                      </div>
+                      <p>{{ tweet.parent.content }}</p>
+                      <div class="tweet-footer" style="margin-bottom: 12px;">
+                        <span class="muted">En réponse à un post</span>
+                      </div>
+                    </div>
+                  </div>
+                @endif
+
+                {{-- Le Tweet principal --}}
+                <div class="tweet tweet-main">
+                    <div style="width: 48px;">
+                        <div class="avatar">
+                            @if(tweet.user.avatarUrl)
+                                <img src="{{ tweet.user.avatarUrl }}" alt="Avatar">
+                            @else
+                                <div class="avatar-placeholder">{{ tweet.user.fullName.charAt(0) }}</div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="tweet-content" style="flex: 1;">
+                        <div style="display: flex; flex-direction: column;">
+                            <strong>{{ tweet.user.fullName }}</strong>
+                            <span class="muted">{{ tweet.user.email }}</span>
+                        </div>
+                        
+                        <p class="tweet-detail-content">{{ tweet.content }}</p>
+
+                        <div style="padding: 12px 0; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); color: var(--muted-text); font-size: 15px;">
+                            {{ tweet.createdAt.toFormat('HH:mm · d LLL yyyy') }}
+                        </div>
+
+                        <div class="tweet-footer" style="padding: 12px 0; border-bottom: 1px solid var(--border-color); margin-top: 0;">
+                            <div class="tweet-action">
+                                <strong>{{ tweet.$extras.likes_count || 0 }}</strong> <span class="muted">J'aime</span>
+                            </div>
+                            <div class="tweet-action">
+                                <strong>{{ tweet.$extras.replies_count || 0 }}</strong> <span class="muted">Réponses</span>
+                            </div>
+                        </div>
+
+                        {{-- Actions bar --}}
+                        <div class="tweet-footer" style="justify-content: space-around; padding: 4px 0;">
+                             <button class="tweet-action">💬</button>
+                             <form action="{{ route('tweets.like', { id: tweet.id }) }}" method="POST">
+                                {{ csrfField() }}
+                                <button type="submit" class="tweet-action">
+                                    {{ (tweet.likes && tweet.likes.some(l => l.userId === auth.user.id)) ? '❤️' : '🤍' }}
+                                </button>
+                             </form>
+                             @if(tweet.userId == auth.user.id)
+                                <form action="{{ route('tweets.destroy', { id: tweet.id }) }}?_method=DELETE" method="POST">
+                                    {{ csrfField() }}
+                                    <button type="submit" class="tweet-action" onclick="return confirm('Supprimer ?')">🗑️</button>
+                                </form>
+                             @endif
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Boîte de réponse --}}
+                <form action="{{ route('tweets.store') }}" method="POST" class="tweet-box" style="align-items: flex-start;">
+                  {{ csrfField() }}
+                  <input type="hidden" name="parentId" value="{{ tweet.id }}">
+                  <div class="avatar">
+                     @if(auth.user.avatarUrl)
+                       <img src="{{ auth.user.avatarUrl }}" alt="Mon Avatar">
+                     @else
+                       <div class="avatar-placeholder">{{ auth.user.fullName.charAt(0) }}</div>
+                     @endif
+                  </div>
+                  <div class="tweet-input-wrap" style="flex: 1;">
+                     <textarea name="content" maxlength="280" placeholder="Postez votre réponse" style="font-size: 18px;" required></textarea>
+                     <div class="tweet-actions">
+                       <button type="submit" class="btn btn-primary" style="height: 32px; padding: 0 16px;">Répondre</button>
+                     </div>
+                  </div>
+                </form>
+
+                {{-- Liste des Réponses --}}
+                @each(reply in tweet.replies)
+                  <div class="tweet">
+                    <div class="avatar">
+                      <a href="{{ route('profile.user.show', { id: reply.user.id }) }}">
+                        @if(reply.user.avatarUrl)
+                          <img src="{{ reply.user.avatarUrl }}" alt="Avatar">
+                        @else
+                          <div class="avatar-placeholder">{{ reply.user.fullName.charAt(0) }}</div>
+                        @endif
+                      </a>
+                    </div>
+                    <div class="tweet-content">
+                      <div>
+                        <strong>{{ reply.user.fullName }}</strong>
+                        <span class="muted">{{ reply.user.email }}</span>
+                      </div>
+                      <p>{{ reply.content }}</p>
+                      
+                      <div class="tweet-footer">
+                        <form action="{{ route('tweets.like', { id: reply.id }) }}" method="POST">
+                          {{ csrfField() }}
+                          <button type="submit" class="tweet-action">
+                             {{ (reply.likes && reply.likes.some(l => l.userId === auth.user.id)) ? '❤️' : '🤍' }}
+                             <span>{{ reply.$extras.likes_count || 0 }}</span>
+                          </button>
+                        </form>
+                        <a href="{{ route('tweets.show', { id: reply.id }) }}" class="tweet-action">💬</a>
+                      </div>
+                    </div>
+                  </div>
+                @endeach
+              </div>
+            </section>
+
+            {{-- Panel Droit --}}
+            <aside class="right-panel">
+              <div class="search-box">
+                <input type="text" placeholder="Chercher" />
+              </div>
+              <section class="card">
+                <h3>Ce qui se passe</h3>
+                <ul class="simple-list">
+                  <li>#AdonisJS</li>
+                  <li>#KadeaAcademy</li>
+                </ul>
+              </section>
+            </aside>
+          </div>
+        @endif
+    </main>
+</body>
+</html>

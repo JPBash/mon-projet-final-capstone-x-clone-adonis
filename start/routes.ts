@@ -44,6 +44,9 @@ router
 
     // Route pour poster un tweet
     router.post('tweets', [TweetsStoreController, 'handle']).as('tweets.store')
+    
+    // Route pour voir le détail d'un tweet et ses réponses
+    router.get('tweets/:id', '#controllers/tweets/shows_controller.handle').as('tweets.show')
   })
   .use(middleware.auth())
 

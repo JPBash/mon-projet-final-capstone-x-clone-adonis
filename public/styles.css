@@ -469,3 +469,35 @@ input[type="file"] {
 .nav-link:contains('Grok') {
     font-weight: 800;
 }
+
+/* ==========================================================================
+   10. SYSTÈME DE RÉPONSES ET CHAÎNES
+   ========================================================================== */
+.reply-line {
+  width: 2px;
+  background-color: var(--border-color);
+  margin: 4px auto 0 auto;
+  flex-grow: 1;
+}
+
+.tweet-parent {
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+}
+
+.tweet-main {
+  padding-top: 0 !important;
+}
+
+.tweet-detail-content {
+  font-size: 22px !important;
+  margin: 16px 0 !important;
+  line-height: 1.2 !important;
+}
+
+.tweet-connector-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 48px;
+}

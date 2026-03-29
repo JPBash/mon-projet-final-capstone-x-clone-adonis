@@ -4,9 +4,6 @@ import { type HttpContext } from '@adonisjs/core/http'
 import app from '@adonisjs/core/services/app'
 import { randomUUID } from 'node:crypto'
 
-import VerifyEmailNotification from '#mails/verify_email_notification'
-import mail from '@adonisjs/mail/services/main'
-
 export default class RegisterController {
   async show({ view }: HttpContext) {
     return view.render('auth/register')
@@ -16,21 +13,20 @@ export default class RegisterController {
     const user = auth.user
     if (!user) return view.render('pages/home', { tweets: [] })
 
-    // On récupère le type de flux via l'URL (ex: /?tab=following)
-    const tab = request.input('tab', 'all')
+    // On récupère les IDs des personnes suivies
+    const followingRow = await user.related('following').query().select('following_id')
+    const followedIds = followingRow.map((f) => f.followingId)
+
+    const tab = request.input('tab', 'following') // On force l'affichage 'following' ou on l'ignore selon le design
 
     const query = Tweet.query()
+      .whereIn('userId', followedIds)
+      .whereNull('parentId') // On n'affiche pas les réponses isolées sur l'accueil
       .preload('user')
       .preload('likes')
       .withCount('likes')
+      .withCount('replies')
       .orderBy('createdAt', 'desc')
-
-    // Si l'utilisateur clique sur "Abonnements"
-    if (tab === 'following') {
-      const followingIds = await user.related('following').query().select('following_id')
-      const ids = followingIds.map((f) => f.followingId)
-      query.whereIn('userId', ids)
-    }
 
     const tweets = await query
 
