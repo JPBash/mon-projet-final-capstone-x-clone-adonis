@@ -22,10 +22,13 @@ ENV NODE_ENV=production
 ENV HOST=0.0.0.0
 WORKDIR /app
 
-COPY --from=build /app/package*.json ./
-RUN npm ci --omit=dev
+# Copy compiled package.json from build folder
+COPY --from=build /app/build/package*.json ./
+RUN npm install --omit=dev
 
+# Copy the rest of the build artifacts
 COPY --from=build /app/build .
 
 EXPOSE 3333
-CMD ["node", "bin/server.js"]
+# Use absolute path for the entrypoint
+CMD ["node", "/app/bin/server.js"]
