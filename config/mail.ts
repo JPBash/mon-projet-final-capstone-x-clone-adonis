@@ -9,7 +9,7 @@ const mailConfig = defineConfig({
     name: env.get('MAIL_FROM_NAME') || 'X Clone',
   },
 
-  mailers: { 
+  mailers: {
     smtp: transports.smtp({
       host: env.get('SMTP_HOST'),
       port: env.get('SMTP_PORT'),

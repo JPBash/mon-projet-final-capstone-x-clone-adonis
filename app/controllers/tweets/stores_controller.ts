@@ -14,7 +14,7 @@ export default class StoreController {
     // 2. On crée le tweet lié à l'utilisateur
     const tweet = await auth.user.related('tweets').create({
       content: content,
-      parentId: parentId || null
+      parentId: parentId || null,
     })
 
     // 3. Extraction et liaison des hashtags

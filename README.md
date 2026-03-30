@@ -6,17 +6,20 @@ Clone full-stack de X (Twitter) réalisé avec **AdonisJS 6**.
 
 ## Fonctionnalités
 
-###  Profil & Personnalisation
+### Profil & Personnalisation
+
 - **Édition complète** : Bio, Avatar et Bannière.
 - **Design X** : Avatar chevauchant et header sticky (flou).
 - **Stats** : Compteurs dynamiques via relations Lucid.
 
-###  Micro-blogging
+### Micro-blogging
+
 - **Tweets** : Publication (280 car.) et suppression sécurisée.
 - **Flux** : Onglets "Pour vous" vs "Abonnements".
 - **Interactions** : Système de Likes avec retour visuel.
 
-###  Sécurité
+### Sécurité
+
 - **Auth** : Sessions gérées via Adonis Auth.
 - **Protection** : Middlewares sur les routes sensibles.
 - **REST** : Utilisation du Method Spoofing (`_method`).
@@ -27,8 +30,7 @@ Clone full-stack de X (Twitter) réalisé avec **AdonisJS 6**.
    Terminal : bash
    git clone <URL> && cd x-clone
    npm install
-   
- 2.Config :
+   2.Config :
 
 Bash
 cp .env.example .env

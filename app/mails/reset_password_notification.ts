@@ -12,7 +12,11 @@ export default class ResetPasswordNotification extends BaseMail {
 
   prepare() {
     // Créer une URL signée valable seulemenet 15 minutes
-    const url = router.makeSignedUrl('auth.reset_password.show', { email: this.user.email }, { expiresIn: '15m' })
+    const url = router.makeSignedUrl(
+      'auth.reset_password.show',
+      { email: this.user.email },
+      { expiresIn: '15m' }
+    )
     const signedUrl = `http://localhost:3333${url}`
 
     this.message.to(this.user.email)

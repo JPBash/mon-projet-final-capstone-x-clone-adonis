@@ -4,8 +4,8 @@
     "builder": "DOCKERFILE"
   },
   "deploy": {
-    "startCommand": "node server.js",
-    "releaseCommand": "node ace migration:run --force",
+    "startCommand": "node build/bin/server.js",
+    "preDeployCommand": "node build/ace.js migration:run --force",
     "restartPolicyType": "ON_FAILURE"
   }
 }

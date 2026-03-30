@@ -5,7 +5,6 @@ import User from '#models/user'
 import Like from '#models/like'
 import Hashtag from '#models/hashtag'
 
-
 export default class Tweet extends BaseModel {
   @column({ isPrimary: true })
   declare id: number

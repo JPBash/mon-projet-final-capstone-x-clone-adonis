@@ -9,7 +9,9 @@ export const controllers = {
     StoreControllers: () => import('#controllers/auth/store_controllers'),
     VerifyEmails: () => import('#controllers/auth/verify_emails_controller'),
   },
+  Grok: () => import('#controllers/grok_controller'),
   NewAccount: () => import('#controllers/new_account_controller'),
+  PasswordResets: () => import('#controllers/password_resets_controller'),
   profiles: {
     Follow: () => import('#controllers/profiles/follow_controller'),
   },
@@ -17,10 +19,9 @@ export const controllers = {
   tweets: {
     Destroys: () => import('#controllers/tweets/destroys_controller'),
     Likes: () => import('#controllers/tweets/likes_controller'),
-    Stores: () => import('#controllers/tweets/stores_controller'),
-    Shows: () => import('#controllers/tweets/shows_controller'),
     Retweets: () => import('#controllers/tweets/retweets_controller'),
     Searches: () => import('#controllers/tweets/searches_controller'),
+    Shows: () => import('#controllers/tweets/shows_controller'),
+    Stores: () => import('#controllers/tweets/stores_controller'),
   },
-  PasswordResets: () => import('#controllers/password_resets_controller'),
 }

@@ -5,6 +5,7 @@ const RegisterController = () => import('#controllers/auth/registers_controller'
 const TweetsStoreController = () => import('#controllers/tweets/stores_controller')
 const VerifyEmailsController = () => import('#controllers/auth/verify_emails_controller')
 const SearchesController = () => import('#controllers/tweets/searches_controller')
+const GrokController = () => import('#controllers/grok_controller')
 
 // 1. La page d'accueil (Home)
 router.get('/', [RegisterController, 'showHome']).as('home')
@@ -19,21 +20,35 @@ router
 
     // Routes de vérification OTP
     router.get('signup/verify', [controllers.NewAccount, 'verifyShow']).as('auth.verify_otp.show')
-    router.post('signup/verify', [controllers.NewAccount, 'verifyStore']).as('auth.verify_otp.store')
+    router
+      .post('signup/verify', [controllers.NewAccount, 'verifyStore'])
+      .as('auth.verify_otp.store')
 
     // Routes de création de mot de passe finaux
-    router.get('signup/password', [controllers.NewAccount, 'passwordShow']).as('auth.create_password.show')
-    router.post('signup/password', [controllers.NewAccount, 'passwordStore']).as('auth.create_password.store')
+    router
+      .get('signup/password', [controllers.NewAccount, 'passwordShow'])
+      .as('auth.create_password.show')
+    router
+      .post('signup/password', [controllers.NewAccount, 'passwordStore'])
+      .as('auth.create_password.store')
 
     // Routes de connexion
     router.get('login', [controllers.Session, 'create']).as('auth.login.show')
     router.post('login', [controllers.Session, 'store']).as('session.store')
 
     // Routes Mot de Passe Oublié
-    router.get('forgot-password', '#controllers/password_resets_controller.showForgot').as('auth.forgot_password.show')
-    router.post('forgot-password', '#controllers/password_resets_controller.sendLink').as('auth.forgot_password.send')
-    router.get('reset-password/:email', '#controllers/password_resets_controller.showReset').as('auth.reset_password.show')
-    router.post('reset-password/:email', '#controllers/password_resets_controller.storeReset').as('auth.reset_password.store')
+    router
+      .get('forgot-password', '#controllers/password_resets_controller.showForgot')
+      .as('auth.forgot_password.show')
+    router
+      .post('forgot-password', '#controllers/password_resets_controller.sendLink')
+      .as('auth.forgot_password.send')
+    router
+      .get('reset-password/:email', '#controllers/password_resets_controller.showReset')
+      .as('auth.reset_password.show')
+    router
+      .post('reset-password/:email', '#controllers/password_resets_controller.storeReset')
+      .as('auth.reset_password.store')
   })
   .use(middleware.guest())
 //  Groupe pour les connectés
@@ -45,12 +60,19 @@ router
 
     // Route pour poster un tweet
     router.post('tweets', [TweetsStoreController, 'handle']).as('tweets.store')
-    
+
     // Route pour voir le détail d'un tweet et ses réponses
     router.get('tweets/:id', '#controllers/tweets/shows_controller.handle').as('tweets.show')
 
     // Route pour retweeter
-    router.post('tweets/:id/retweet', '#controllers/tweets/retweets_controller.handle').as('tweets.retweet')
+    router
+      .post('tweets/:id/retweet', '#controllers/tweets/retweets_controller.handle')
+      .as('tweets.retweet')
+
+    // Routes Grok / IA locale
+    router.post('grok/generate', [GrokController, 'generate']).as('grok.generate')
+    router.post('grok/hashtags', [GrokController, 'hashtags']).as('grok.hashtags')
+    router.get('grok/analyze', [GrokController, 'analyze']).as('grok.analyze')
   })
   .use(middleware.auth())
 

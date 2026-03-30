@@ -18,8 +18,32 @@
                 <a href="{{ route('home') }}" class="nav-link">Accueil</a>
                 <button class="nav-link">Explorer</button>
                 <button class="nav-link">Notifications</button>
-                <button class="nav-link" onclick="window.open('https://x.com/i/grok', '_blank')">Grok</button>
-                <button class="nav-link">Paramètres</button>
+                <div class="grok-menu">
+                  <button class="nav-link grok-toggle" type="button" onclick="document.getElementById('grok-tools-profile').classList.toggle('show')">
+                    Grok / IA
+                  </button>
+                  <div id="grok-tools-profile" class="grok-tools">
+                    <form action="{{ route('grok.generate') }}" method="POST">
+                      {{ csrfField() }}
+                      <input type="hidden" name="content" value="{{ auth.user.bio || auth.user.fullName }}">
+                      <button class="grok-action" type="submit">
+                        Générer un tweet
+                      </button>
+                    </form>
+                    <form action="{{ route('grok.hashtags') }}" method="POST">
+                      {{ csrfField() }}
+                      <input type="hidden" name="content" value="{{ auth.user.bio || auth.user.fullName }}">
+                      <button class="grok-action" type="submit">
+                        Suggérer des hashtags
+                      </button>
+                    </form>
+                    <form action="{{ route('grok.analyze') }}" method="GET">
+                      <button class="grok-action" type="submit">
+                        Analyser mes tweets
+                      </button>
+                    </form>
+                  </div>
+                </div>
                 <button class="nav-link">Messages</button>
                 <button class="nav-link">Paramètres</button>
                 <a href="{{ route('profile.show') }}" class="nav-link active">Profil</a>
@@ -71,6 +95,32 @@
                 <div style="display: flex; justify-content: flex-end; padding: 12px 0;">
                    <button class="btn btn-outline" onclick="document.getElementById('edit-form').style.display='block'">Éditer le profil</button>
                 </div>
+
+                @if(flashMessages.has('grok_result'))
+                  @let(grok = flashMessages.get('grok_result'))
+                  <div class="grok-result-box" style="margin-top: 8px;">
+                    <strong>{{ grok.title }}</strong>
+                    <p>{{ grok.text }}</p>
+                    @if(grok.tags && grok.tags.length)
+                      <div class="grok-tags">{{ grok.tags.join(' ') }}</div>
+                    @endif
+                  </div>
+                @endif
+
+                @if(flashMessages.has('grok_analysis'))
+                  @let(analysis = flashMessages.get('grok_analysis'))
+                  <div class="grok-result-box" style="margin-top: 8px;">
+                    <strong>Analyse de vos tweets</strong>
+                    <p>Total tweets : {{ analysis.totalTweets }} | Likes : {{ analysis.totalLikes }} | Retweets : {{ analysis.totalRetweets }} | Réponses : {{ analysis.totalReplies }}</p>
+                    <p>Engagement moyen : {{ analysis.averageEngagement }}</p>
+                    <p>Meilleur tweet : {{ analysis.topTweet }}</p>
+                    <ul class="grok-recommendations">
+                      @each(item in analysis.recommendations)
+                        <li>{{ item }}</li>
+                      @endeach
+                    </ul>
+                  </div>
+                @endif
 
                 <h2>{{ auth.user.fullName }}</h2>
                 <p class="muted">{{ auth.user.email }}</p>

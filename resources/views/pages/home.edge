@@ -21,9 +21,32 @@
                 <a href="{{ route('home') }}" class="nav-link active">Accueil</a>
                 <button class="nav-link">Explorer</button>
                 <button class="nav-link">Notifications</button>
-                <button class="nav-link" onclick="window.open('https://x.com/i/grok', '_blank')">
-                Grok
-                </button>
+                <div class="grok-menu">
+                  <button class="nav-link grok-toggle" type="button" onclick="document.getElementById('grok-tools-home').classList.toggle('show')">
+                    Grok / IA
+                  </button>
+                  <div id="grok-tools-home" class="grok-tools">
+                    <form action="{{ route('grok.generate') }}" method="POST">
+                      {{ csrfField() }}
+                      <input type="hidden" id="grok-generate-content-home" name="content">
+                      <button class="grok-action" type="submit" onclick="document.getElementById('grok-generate-content-home').value = document.getElementById('tweet-content-home').value">
+                        Générer un tweet
+                      </button>
+                    </form>
+                    <form action="{{ route('grok.hashtags') }}" method="POST">
+                      {{ csrfField() }}
+                      <input type="hidden" id="grok-hashtags-content-home" name="content">
+                      <button class="grok-action" type="submit" onclick="document.getElementById('grok-hashtags-content-home').value = document.getElementById('tweet-content-home').value">
+                        Suggérer des hashtags
+                      </button>
+                    </form>
+                    <form action="{{ route('grok.analyze') }}" method="GET">
+                      <button class="grok-action" type="submit">
+                        Analyser mes tweets
+                      </button>
+                    </form>
+                  </div>
+                </div>
                 <button class="nav-link">Paramètres</button>
                 <button class="nav-link">Messages</button>
                 <a href="{{ route('profile.show') }}" class="nav-link">Profil</a>
@@ -76,7 +99,31 @@
                     @endif
                  </div>
                  <div class="tweet-input-wrap">
-                    <textarea name="content" maxlength="280" placeholder="Quoi de neuf ?" required></textarea>
+                    <textarea id="tweet-content-home" name="content" maxlength="280" placeholder="Quoi de neuf ?" required></textarea>
+                    @if(flashMessages.has('grok_result'))
+                      @let(grok = flashMessages.get('grok_result'))
+                      <div class="grok-result-box">
+                        <strong>{{ grok.title }}</strong>
+                        <p>{{ grok.text }}</p>
+                        @if(grok.tags && grok.tags.length)
+                          <div class="grok-tags">{{ grok.tags.join(' ') }}</div>
+                        @endif
+                      </div>
+                    @endif
+                    @if(flashMessages.has('grok_analysis'))
+                      @let(analysis = flashMessages.get('grok_analysis'))
+                      <div class="grok-result-box">
+                        <strong>Analyse de vos tweets</strong>
+                        <p>Total tweets : {{ analysis.totalTweets }} | Likes : {{ analysis.totalLikes }} | Retweets : {{ analysis.totalRetweets }} | Réponses : {{ analysis.totalReplies }}</p>
+                        <p>Engagement moyen : {{ analysis.averageEngagement }}</p>
+                        <p>Meilleur tweet : {{ analysis.topTweet }}</p>
+                        <ul class="grok-recommendations">
+                          @each(item in analysis.recommendations)
+                            <li>{{ item }}</li>
+                          @endeach
+                        </ul>
+                      </div>
+                    @endif
                     <div class="tweet-actions">
                       <button type="submit" class="btn btn-primary">Poster</button>
                     </div>
@@ -168,7 +215,7 @@
             {{-- Panel Droit --}}
             <aside class="right-panel">
               <div class="search-box">
-                <input type="text" placeholder="Chercher" />
+                <input type="text" placeholder="Rechercher" />
               </div>
               <section class="card">
                 <h3>Ce qui se passe</h3>

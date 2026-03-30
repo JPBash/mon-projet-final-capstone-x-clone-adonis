@@ -5,7 +5,8 @@ export default class extends BaseSchema {
 
   async up() {
     this.schema.alterTable(this.tableName, (table) => {
-      table.integer('retweet_id')
+      table
+        .integer('retweet_id')
         .unsigned()
         .references('id')
         .inTable('tweets')

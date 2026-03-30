@@ -14,7 +14,7 @@ RUN npm ci
 # Stage 3: Build
 FROM deps AS build
 COPY . .
-RUN node ace build --ignore-ts-errors
+RUN node ace build --ignore-ts-errors --production
 
 # Stage 4: Production
 FROM node:24-alpine AS production
@@ -27,8 +27,8 @@ COPY --from=build /app/build/package*.json ./
 RUN npm install --omit=dev
 
 # Copy the rest of the build artifacts
-COPY --from=build /app/build .
+COPY --from=build /app/build ./build
 
 EXPOSE 3333
 # Use absolute path for the entrypoint
-CMD ["node", "/app/bin/server.js"]
+CMD ["node", "build/bin/server.js"]

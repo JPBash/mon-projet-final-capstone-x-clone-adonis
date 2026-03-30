@@ -62,7 +62,15 @@ export class LikeSchema extends BaseModel {
 }
 
 export class TweetSchema extends BaseModel {
-  static $columns = ['id', 'userId', 'content', 'createdAt', 'updatedAt', 'parentId', 'retweetId'] as const
+  static $columns = [
+    'id',
+    'userId',
+    'content',
+    'createdAt',
+    'updatedAt',
+    'parentId',
+    'retweetId',
+  ] as const
   $columns = TweetSchema.$columns
   @column({ isPrimary: true })
   declare id: number
@@ -81,7 +89,18 @@ export class TweetSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = ['id', 'fullName', 'email', 'password', 'createdAt', 'updatedAt', 'avatarUrl', 'coverUrl', 'bio', 'isEmailVerified'] as const
+  static $columns = [
+    'id',
+    'fullName',
+    'email',
+    'password',
+    'createdAt',
+    'updatedAt',
+    'avatarUrl',
+    'coverUrl',
+    'bio',
+    'isEmailVerified',
+  ] as const
   $columns = UserSchema.$columns
   @column({ isPrimary: true })
   declare id: number

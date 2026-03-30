@@ -6,7 +6,12 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-      table.integer('hashtag_id').unsigned().references('id').inTable('hashtags').onDelete('CASCADE')
+      table
+        .integer('hashtag_id')
+        .unsigned()
+        .references('id')
+        .inTable('hashtags')
+        .onDelete('CASCADE')
       table.integer('tweet_id').unsigned().references('id').inTable('tweets').onDelete('CASCADE')
       table.unique(['hashtag_id', 'tweet_id'])
       table.timestamp('created_at', { useTz: true })

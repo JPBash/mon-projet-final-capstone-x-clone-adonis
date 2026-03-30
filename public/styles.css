@@ -18,7 +18,13 @@
   margin: 0;
   padding: 0;
   /* Police par défaut de X */
-  font-family: 'Segoe UI', Meiryo, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:
+    'Segoe UI',
+    Meiryo,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
 }
 
 body {
@@ -26,6 +32,7 @@ body {
   color: var(--main-text);
   font-size: 15px; /* Taille de police standard de X */
   line-height: 1.3;
+  overflow-x: hidden;
 }
 
 a {
@@ -45,7 +52,7 @@ ul {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 9999px; 
+  border-radius: 9999px;
   font-weight: 700;
   padding: 0 16px;
   height: 36px;
@@ -55,7 +62,7 @@ ul {
 }
 
 .btn-primary {
-  background-color: #1d9bf0; 
+  background-color: #1d9bf0;
   color: white;
   padding: 12px 24px;
   border-radius: 9999px;
@@ -88,7 +95,7 @@ textarea {
   outline: none;
 }
 
-input[type="file"] {
+input[type='file'] {
   font-size: 13px;
   color: var(--muted-text);
 }
@@ -102,9 +109,12 @@ input[type="file"] {
 }
 
 .layout {
-  display: flex;
+  display: grid;
+  grid-template-columns: 275px minmax(0, 1fr) 350px;
   width: 100%;
   max-width: 1260px; /* Largeur max de X */
+  margin: 0 auto;
+  align-items: start;
 }
 
 /* ==========================================================================
@@ -154,6 +164,78 @@ input[type="file"] {
   font-weight: 700;
 }
 
+.grok-menu {
+  position: relative;
+  width: 100%;
+}
+
+.grok-toggle {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--main-text);
+  cursor: pointer;
+}
+
+.grok-tools {
+  display: none;
+  margin-top: 6px;
+  padding: 8px;
+  background-color: #16181c;
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+}
+
+.grok-tools.show {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.grok-action {
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--main-text);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.grok-action:hover {
+  background-color: var(--bg-hover);
+}
+
+.grok-result-box {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  background-color: #111214;
+}
+
+.grok-result-box p {
+  margin-top: 8px;
+}
+
+.grok-tags {
+  margin-top: 8px;
+  color: var(--twitter-blue);
+  font-weight: 600;
+}
+
+.grok-recommendations {
+  margin-top: 8px;
+  padding-left: 18px;
+}
+
+.grok-recommendations li {
+  margin-bottom: 6px;
+  color: var(--main-text);
+}
+
 .user-chip {
   margin-top: auto; /* Pousse vers le bas */
   margin-bottom: 20px;
@@ -195,6 +277,10 @@ input[type="file"] {
 .profile-page {
   flex: 1; /* Prend l'espace restant */
   max-width: 600px; /* Largeur max du feed de X */
+  min-width: 0;
+  min-height: 100vh;
+  height: 100vh;
+  overflow-y: auto;
   border-right: 1px solid var(--border-color);
 }
 
@@ -427,6 +513,9 @@ input[type="file"] {
 .right-panel {
   width: 350px;
   padding: 12px 24px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
 }
 
 .search-box input {
@@ -467,7 +556,7 @@ input[type="file"] {
 }
 
 .nav-link:contains('Grok') {
-    font-weight: 800;
+  font-weight: 800;
 }
 
 /* ==========================================================================
@@ -481,25 +570,25 @@ input[type="file"] {
 }
 
 .tweet-parent {
-  border-bottom: none !important;
-  padding-bottom: 0 !important;
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .tweet-main {
-  padding-top: 0 !important;
+  padding-top: 0;
 }
 
 .tweet-detail-content {
-  font-size: 22px !important;
-  margin: 16px 0 !important;
-  line-height: 1.2 !important;
+  font-size: 22px;
+  margin: 16px0;
+  line-height: 1.2;
 }
 
 .tweet-connector-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 48px;
 }
 
 /* ==========================================================================
@@ -508,7 +597,7 @@ input[type="file"] {
 .search-tabs {
   background-color: var(--bg-color);
   position: sticky;
-  top: 0; 
+  top: 0;
   z-index: 5;
 }
 
@@ -531,5 +620,148 @@ input[type="file"] {
 }
 
 .tab-content {
-    margin-top: 10px;
+  margin-top: 10px;
+}
+
+/* ==========================================================================
+   12. FORMULAIRES AUTH + RESPONSIVE
+   ========================================================================== */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.form-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-container input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-color);
+  color: var(--main-text);
+}
+
+.form-container button {
+  padding: 12px;
+  border-radius: 9999px;
+  border: none;
+  background-color: var(--twitter-blue);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.form-container button:hover {
+  background-color: var(--twitter-blue-hover);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (max-width: 1024px) {
+  .layout {
+    grid-template-columns: 88px minmax(0, 1fr);
+  }
+
+  .right-panel {
+    display: none;
+  }
+
+  .sidebar {
+    width: 88px;
+    padding: 12px 8px;
+    align-items: center;
+  }
+
+  .brand {
+    font-size: 24px;
+    padding: 8px 0 12px;
+  }
+
+  .nav-link {
+    justify-content: center;
+    text-align: center;
+    font-size: 13px;
+    line-height: 1.2;
+    padding: 10px 6px;
+  }
+
+  .grok-tools {
+    position: static;
+    padding: 6px;
+  }
+
+  .grok-action {
+    font-size: 12px;
+    text-align: center;
+  }
+
+  .user-chip {
+    width: 100%;
+    justify-content: center;
+    padding: 8px 4px;
+  }
+
+  .user-chip .muted,
+  .sidebar form {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar,
+  .right-panel {
+    display: none;
+  }
+
+  .feed-panel,
+  .profile-page {
+    max-width: 100%;
+    height: auto;
+    min-height: 100vh;
+    overflow-y: visible;
+    border-right: none;
+  }
+
+  .profile-cover {
+    height: 140px;
+  }
+
+  .avatar-xl {
+    width: 80px;
+    height: 80px;
+    top: -40px;
+  }
+
+  .form-container {
+    max-width: 100%;
+    min-height: 100vh;
+    justify-content: center;
+    padding: 16px;
+  }
+
+  .tweet,
+  .tweet-box {
+    padding: 12px;
+  }
 }

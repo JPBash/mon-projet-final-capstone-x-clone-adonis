@@ -23,6 +23,9 @@ export type ScannedRoutes = {
     'tweets.store': { paramsTuple?: []; params?: {} }
     'tweets.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'tweets.retweet': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'grok.generate': { paramsTuple?: []; params?: {} }
+    'grok.hashtags': { paramsTuple?: []; params?: {} }
+    'grok.analyze': { paramsTuple?: []; params?: {} }
     'tweets.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'tweets.like': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'profile.follow': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -43,6 +46,7 @@ export type ScannedRoutes = {
     'auth.reset_password.show': { paramsTuple: [ParamValue]; params: {'email': ParamValue} }
     'profile.show': { paramsTuple?: []; params?: {} }
     'tweets.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'grok.analyze': { paramsTuple?: []; params?: {} }
     'profile.user.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'profile.followers': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'profile.following': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -60,6 +64,7 @@ export type ScannedRoutes = {
     'auth.reset_password.show': { paramsTuple: [ParamValue]; params: {'email': ParamValue} }
     'profile.show': { paramsTuple?: []; params?: {} }
     'tweets.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'grok.analyze': { paramsTuple?: []; params?: {} }
     'profile.user.show': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'profile.followers': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'profile.following': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
@@ -78,6 +83,8 @@ export type ScannedRoutes = {
     'auth.logout': { paramsTuple?: []; params?: {} }
     'tweets.store': { paramsTuple?: []; params?: {} }
     'tweets.retweet': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+    'grok.generate': { paramsTuple?: []; params?: {} }
+    'grok.hashtags': { paramsTuple?: []; params?: {} }
     'tweets.like': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'profile.follow': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }

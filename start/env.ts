@@ -43,5 +43,5 @@ export default await Env.create(new URL('../', import.meta.url), {
   MAILGUN_DOMAIN: Env.schema.string.optional(),
   SPARKPOST_API_KEY: Env.schema.string.optional(),
   RESEND_API_KEY: Env.schema.string.optional(),
-  BREVO_API_KEY: Env.schema.string.optional()
+  BREVO_API_KEY: Env.schema.string.optional(),
 })

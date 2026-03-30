@@ -11,7 +11,7 @@ export default class NewAccountController {
 
   async store({ request, response, session }: HttpContext) {
     const payload = await request.validateUsing(signupStep1Validator)
-    
+
     // 1. Générer code 4 chiffres
     const otp = Math.floor(1000 + Math.random() * 9000).toString()
 
@@ -19,7 +19,9 @@ export default class NewAccountController {
     session.put('signup_data', { fullName: payload.fullName, email: payload.email, otp })
 
     // 3. Envoyer l'email en direct (send) au lieu d'asynchrone (sendLater) pour voir l'erreur tout de suite
-    await mail.send(new VerifyEmailNotification(payload.fullName || 'Utilisateur', payload.email, otp))
+    await mail.send(
+      new VerifyEmailNotification(payload.fullName || 'Utilisateur', payload.email, otp)
+    )
 
     return response.redirect().toRoute('auth.verify_otp.show')
   }
@@ -62,7 +64,7 @@ export default class NewAccountController {
       fullName: data.fullName,
       email: data.email,
       password: payload.password,
-      isEmailVerified: true // Le compte est créé APRÈS la vérification
+      isEmailVerified: true, // Le compte est créé APRÈS la vérification
     })
 
     session.forget('signup_data')

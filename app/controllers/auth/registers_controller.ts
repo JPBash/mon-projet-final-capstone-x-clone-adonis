@@ -38,7 +38,7 @@ export default class RegisterController {
   async store({ request, response, auth }: HttpContext) {
     const data = request.only(['fullName', 'email', 'password'])
     const user = await User.create(data)
-    
+
     await auth.use('web').login(user)
 
     return response.redirect().toRoute('home')
@@ -51,7 +51,8 @@ export default class RegisterController {
       .withCount('following')
       .firstOrFail()
 
-    const tweets = await user.related('tweets')
+    const tweets = await user
+      .related('tweets')
       .query()
       .preload('user')
       .preload('retweet', (q) => q.preload('user'))
@@ -62,7 +63,8 @@ export default class RegisterController {
 
     let isFollowing = false
     if (auth.user) {
-      const follow = await auth.user.related('following')
+      const follow = await auth.user
+        .related('following')
         .query()
         .where('following_id', user.id)
         .first()
