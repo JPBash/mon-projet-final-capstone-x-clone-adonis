@@ -14,7 +14,7 @@ RUN npm ci
 # Stage 3: Build
 FROM deps AS build
 COPY . .
-RUN node ace build --ignore-ts-errors --production
+RUN node ace build --ignore-ts-errors
 
 # Stage 4: Production
 FROM node:24-alpine AS production
