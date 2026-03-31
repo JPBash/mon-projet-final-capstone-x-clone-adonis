@@ -28,6 +28,7 @@ RUN npm install --omit=dev
 
 # Copy the rest of the build artifacts
 COPY --from=build /app/build ./build
+COPY --from=build /app/build/public ./public
 
 EXPOSE 3333
 # Use absolute path for the entrypoint
