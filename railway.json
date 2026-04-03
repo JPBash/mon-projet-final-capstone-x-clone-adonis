@@ -6,6 +6,7 @@
   "deploy": {
     "startCommand": "node build/bin/server.js",
     "preDeployCommand": "node build/ace.js migration:run --force",
-    "restartPolicyType": "ON_FAILURE"
+    "restartPolicyType": "ON_FAILURE",
+    "ipv6EgressEnabled": true
   }
 }
