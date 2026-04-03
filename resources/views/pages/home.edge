@@ -1,137 +1,244 @@
-@layout()
-  @if(auth.user)
-
-    {{-- Flux Principal --}}
-    <section class="feed-panel">
-      <header class="feed-header">
-        <h2>Accueil</h2>
-        <div class="tabs">
-          <a href="{{ route('home') }}?tab=all" 
-             class="tab {{ currentTab === 'all' || !currentTab ? 'active' : '' }}">
-             Pour vous
-          </a>
-          <a href="{{ route('home') }}?tab=following" 
-             class="tab {{ currentTab === 'following' ? 'active' : '' }}">
-             Abonnements
-          </a>
-        </div>
-      </header>
-
-      {{-- Boîte de publication --}}
-      <form action="{{ route('tweets.store') }}" method="POST" class="tweet-box" id="composer">
-        {{ csrfField() }}
-        <div class="avatar">
-          @if(auth.user.avatarUrl)
-            <img src="{{ auth.user.avatarUrl }}" alt="Mon Avatar">
-          @else
-            <div class="avatar-placeholder">{{ auth.user.fullName.charAt(0) }}</div>
-          @endif
-        </div>
-        <div class="tweet-input-wrap">
-          <textarea id="tweet-content-home" name="content" maxlength="280" placeholder="Quoi de neuf ?" required></textarea>
-          @if(flashMessages.has('grok_result'))
-            @let(grok = flashMessages.get('grok_result'))
-            <div class="grok-result-box">
-              <strong>{{ grok.title }}</strong>
-              <p>{{ grok.text }}</p>
-              @if(grok.tags && grok.tags.length)
-                <div class="grok-tags">{{ grok.tags.join(' ') }}</div>
-              @endif
-            </div>
-          @endif
-          <div class="tweet-actions">
-            <button type="submit" class="btn btn-primary">Poster</button>
-          </div>
-        </div>
-      </form>
-
-      {{-- Liste des Tweets --}}
-      <div id="feed-list" class="tweet-list">
-        @each(tweet in tweets)
-          @if(tweet.retweetId)
-            <div style="padding:4px 16px 0 52px; font-size:13px; color:var(--muted-text); font-weight:700;">
-              🔁 {{ tweet.user.fullName }} a retweeté
-            </div>
-          @endif
-
-          <div class="tweet">
-            <div class="avatar">
-              @assign(displayTweet = tweet.retweet || tweet)
-              <a href="{{ route('profile.user.show', { id: displayTweet.user.id }) }}">
-                @if(displayTweet.user.avatarUrl)
-                  <img src="{{ displayTweet.user.avatarUrl }}" alt="Avatar">
-                @else
-                  <div class="avatar-placeholder">{{ displayTweet.user.fullName.charAt(0) }}</div>
-                @endif
-              </a>
-            </div>
-
-            <div class="tweet-content">
-              <div style="display:flex; justify-content:space-between; align-items:center;">
-                <div>
-                  <a href="{{ route('profile.user.show', { id: displayTweet.user.id }) }}" style="text-decoration:none; color:inherit;">
-                    <strong>{{ displayTweet.user.fullName }}</strong>
-                  </a>
-                  <span class="muted">{{ displayTweet.user.email }}</span>
-                </div>
-
-                @if(displayTweet.userId == auth.user.id)
-                  <form action="{{ route('tweets.destroy', { id: displayTweet.id }) }}?_method=DELETE" method="POST">
-                    {{ csrfField() }}
-                    <button type="submit" class="tweet-action tweet-action-delete" onclick="return confirm('Supprimer ce tweet ?')">
-                      Supprimer
-                    </button>
-                  </form>
-                @endif
-              </div>
-
-              <a href="{{ route('tweets.show', { id: displayTweet.id }) }}" style="text-decoration:none; color:inherit;">
-                <p style="margin-top:5px; font-size:15px; line-height:1.4;">
-                  {{{ displayTweet.content ? displayTweet.content.replace(/#(\w+)/g, '<a href="/hashtag/$1" class="hashtag-link">#$1</a>') : '' }}}
-                </p>
-              </a>
-
-              <div class="tweet-footer">
-                <a href="{{ route('tweets.show', { id: displayTweet.id }) }}" class="tweet-action">
-                  💬 <span>{{ displayTweet.$extras.replies_count || 0 }}</span>
-                </a>
-                <form action="{{ route('tweets.retweet', { id: displayTweet.id }) }}" method="POST">
-                  {{ csrfField() }}
-                  <button type="submit" class="tweet-action">🔁 <span>{{ displayTweet.$extras.retweets_count || 0 }}</span></button>
-                </form>
-                <form action="{{ route('tweets.like', { id: displayTweet.id }) }}" method="POST">
-                  {{ csrfField() }}
-                  <button type="submit" class="tweet-action tweet-action-like">
-                    @if(displayTweet.likes && displayTweet.likes.some(l => l.userId === auth.user.id))
-                      ❤️
-                    @else
-                      🤍
-                    @endif
-                    <span>{{ displayTweet.$extras.likes_count || 0 }}</span>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clone X - Accueil</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+    <main id="app" class="app-shell">
+        
+        @if(auth.user)
+          <div class="layout">
+            {{-- Sidebar --}}
+            <aside class="sidebar">
+              <div class="brand">X</div>
+              <nav class="nav-menu">
+                <a href="{{ route('home') }}" class="nav-link active">Accueil</a>
+                <button class="nav-link">Explorer</button>
+                <button class="nav-link">Notifications</button>
+                <div class="grok-menu">
+                  <button class="nav-link grok-toggle" type="button" onclick="document.getElementById('grok-tools-home').classList.toggle('show')">
+                    Grok / IA
                   </button>
-                </form>
+                  <div id="grok-tools-home" class="grok-tools">
+                    <form action="{{ route('grok.generate') }}" method="POST">
+                      {{ csrfField() }}
+                      <input type="hidden" id="grok-generate-content-home" name="content">
+                      <button class="grok-action" type="submit" onclick="document.getElementById('grok-generate-content-home').value = document.getElementById('tweet-content-home').value">
+                        Générer un tweet
+                      </button>
+                    </form>
+                    <form action="{{ route('grok.hashtags') }}" method="POST">
+                      {{ csrfField() }}
+                      <input type="hidden" id="grok-hashtags-content-home" name="content">
+                      <button class="grok-action" type="submit" onclick="document.getElementById('grok-hashtags-content-home').value = document.getElementById('tweet-content-home').value">
+                        Suggérer des hashtags
+                      </button>
+                    </form>
+                    <form action="{{ route('grok.analyze') }}" method="GET">
+                      <button class="grok-action" type="submit">
+                        Analyser mes tweets
+                      </button>
+                    </form>
+                  </div>
+                </div>
+                <button class="nav-link">Paramètres</button>
+                <button class="nav-link">Messages</button>
+                <a href="{{ route('profile.show') }}" class="nav-link">Profil</a>
+              </nav>
+
+              <div class="user-chip">
+                <div class="avatar">
+                  @if(auth.user.avatarUrl)
+                    <img src="{{ auth.user.avatarUrl }}" alt="Avatar">
+                  @else
+                    <div class="avatar-placeholder">{{ auth.user.fullName.charAt(0) }}</div>
+                  @endif
+                </div>
+                <div>
+                  <p><strong>{{ auth.user.fullName }}</strong></p>
+                  <p class="muted">{{ auth.user.email }}</p>
+                </div>
               </div>
-            </div>
+
+              <form action="{{ route('auth.logout') }}" method="POST">
+                {{ csrfField() }}
+                <button type="submit" class="btn btn-outline" style="width: 100%; margin-top: 10px;">Se déconnecter</button>
+              </form>
+            </aside>
+
+            {{-- Flux Principal --}}
+            <section class="feed-panel">
+              <header class="feed-header">
+                <h2>Accueil</h2>
+                <div class="tabs">
+                  <a href="{{ route('home') }}?tab=all" 
+                     class="tab {{ currentTab === 'all' || !currentTab ? 'active' : '' }}">
+                     Pour vous
+                  </a>
+                  <a href="{{ route('home') }}?tab=following" 
+                     class="tab {{ currentTab === 'following' ? 'active' : '' }}">
+                     Abonnements
+                  </a>
+                </div>
+              </header>
+
+              {{-- Boîte de publication --}}
+               <form action="{{ route('tweets.store') }}" method="POST" class="tweet-box">
+                 {{ csrfField() }}
+                 <div class="avatar">
+                    @if(auth.user.avatarUrl)
+                      <img src="{{ auth.user.avatarUrl }}" alt="Mon Avatar">
+                    @else
+                      <div class="avatar-placeholder">{{ auth.user.fullName.charAt(0) }}</div>
+                    @endif
+                 </div>
+                 <div class="tweet-input-wrap">
+                    <textarea id="tweet-content-home" name="content" maxlength="280" placeholder="Quoi de neuf ?" required></textarea>
+                    @if(flashMessages.has('grok_result'))
+                      @let(grok = flashMessages.get('grok_result'))
+                      <div class="grok-result-box">
+                        <strong>{{ grok.title }}</strong>
+                        <p>{{ grok.text }}</p>
+                        @if(grok.tags && grok.tags.length)
+                          <div class="grok-tags">{{ grok.tags.join(' ') }}</div>
+                        @endif
+                      </div>
+                    @endif
+                    @if(flashMessages.has('grok_analysis'))
+                      @let(analysis = flashMessages.get('grok_analysis'))
+                      <div class="grok-result-box">
+                        <strong>Analyse de vos tweets</strong>
+                        <p>Total tweets : {{ analysis.totalTweets }} | Likes : {{ analysis.totalLikes }} | Retweets : {{ analysis.totalRetweets }} | Réponses : {{ analysis.totalReplies }}</p>
+                        <p>Engagement moyen : {{ analysis.averageEngagement }}</p>
+                        <p>Meilleur tweet : {{ analysis.topTweet }}</p>
+                        <ul class="grok-recommendations">
+                          @each(item in analysis.recommendations)
+                            <li>{{ item }}</li>
+                          @endeach
+                        </ul>
+                      </div>
+                    @endif
+                    <div class="tweet-actions">
+                      <button type="submit" class="btn btn-primary">Poster</button>
+                    </div>
+                 </div>
+               </form>
+
+              {{-- Liste des Tweets --}}
+              <div id="feed-list" class="tweet-list">
+                @each(tweet in tweets)
+                  {{-- Indicateur de retweet --}}
+                  @if(tweet.retweetId)
+                    <div style="padding: 4px 16px 0 52px; font-size: 13px; color: var(--muted-text); font-weight: 700;">
+                        🔁 {{ tweet.user.fullName }} a retweeté
+                    </div>
+                  @endif
+
+                  <div class="tweet">
+                    <div class="avatar">
+                      {{-- Si c'est un retweet, on affiche l'avatar de l'auteur ORIGINAL --}}
+                      @assign(displayTweet = tweet.retweet || tweet)
+                      <a href="{{ route('profile.user.show', { id: displayTweet.user.id }) }}">
+                        @if(displayTweet.user.avatarUrl)
+                          <img src="{{ displayTweet.user.avatarUrl }}" alt="Avatar">
+                        @else
+                          <div class="avatar-placeholder">{{ displayTweet.user.fullName.charAt(0) }}</div>
+                        @endif
+                      </a>
+                    </div>
+
+                    <div class="tweet-content">
+                      <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                          <a href="{{ route('profile.user.show', { id: displayTweet.user.id }) }}" style="text-decoration: none; color: inherit;">
+                            <strong>{{ displayTweet.user.fullName }}</strong>
+                          </a>
+                          <span class="muted">{{ displayTweet.user.email }}</span>
+                        </div>
+
+                        @if(displayTweet.userId == auth.user.id)
+                          <form action="{{ route('tweets.destroy', { id: displayTweet.id }) }}?_method=DELETE" method="POST">
+                            {{ csrfField() }}
+                            <button type="submit" class="tweet-action tweet-action-delete" onclick="return confirm('Supprimer ce tweet ?')" style="background: none; border: none; color: #f4212e; cursor: pointer; font-size: 0.8rem;">
+                                Supprimer
+                            </button>
+                          </form>
+                        @endif
+                      </div>
+
+                      <a href="{{ route('tweets.show', { id: displayTweet.id }) }}" style="text-decoration: none; color: inherit;">
+                        <p style="margin-top: 5px; font-size: 15px; line-height: 1.4;">
+                          {{{ displayTweet.content ? displayTweet.content.replace(/#(\w+)/g, '<a href="/hashtag/$1" class="hashtag-link">#$1</a>') : '' }}}
+                        </p>
+                      </a>
+
+                      <div class="tweet-footer">
+                        <a href="{{ route('tweets.show', { id: displayTweet.id }) }}" class="tweet-action">
+                            💬 <span>{{ displayTweet.$extras.replies_count || 0 }}</span>
+                        </a>
+
+                        <form action="{{ route('tweets.retweet', { id: displayTweet.id }) }}" method="POST">
+                          {{ csrfField() }}
+                          <button type="submit" class="tweet-action" style="color: {{ (displayTweet.retweets && displayTweet.retweets.some(r => r.userId === auth.user.id)) ? '#00ba7c' : '' }}">
+                             🔁 <span>{{ displayTweet.$extras.retweets_count || 0 }}</span>
+                          </button>
+                        </form>
+
+                        <form action="{{ route('tweets.like', { id: displayTweet.id }) }}" method="POST">
+                          {{ csrfField() }}
+                          <button type="submit" class="tweet-action tweet-action-like" style="color: {{ (displayTweet.likes && displayTweet.likes.some(l => l.userId === auth.user.id)) ? '#f91880' : '' }}">
+                            @if(displayTweet.likes && displayTweet.likes.some(l => l.userId === auth.user.id))
+                              ❤️
+                            @else
+                              🤍
+                            @endif
+                            <span>{{ displayTweet.$extras.likes_count || 0 }}</span>
+                          </button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                @else
+                  <div style="padding: 40px; text-align: center; color: #71767b;">
+                    <p>Aucun tweet à afficher pour le moment.</p>
+                  </div>
+                @endeach
+              </div>
+            </section>
+
+            {{-- Panel Droit --}}
+            <aside class="right-panel">
+              <div class="search-box">
+                <input type="text" placeholder="Rechercher" />
+              </div>
+              <section class="card">
+                <h3>Ce qui se passe</h3>
+                <ul class="simple-list">
+                  <li>#AdonisJS</li>
+                  <li>#KadeaAcademy</li>
+                  <li>#Actu Est de la RDC</li>
+                </ul>
+              </section>
+            </aside>
           </div>
         @else
-          <div style="padding:40px; text-align:center; color:#71767b;">
-            <p>Aucun tweet à afficher pour le moment.</p>
+          {{-- Page de connexion/inscription pour les visiteurs --}}
+          <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; width: 100%; gap: 20px;">
+            <div class="brand" style="font-size: 80px; margin-bottom: 20px;">X</div>
+            <h1 style="font-size: 3rem; font-weight: 800;">Ça se passe maintenant</h1>
+            <h2 style="font-size: 2rem; margin-bottom: 20px;">Inscrivez-vous.</h2>
+            <a href="{{ route('auth.register.show') }}" class="btn btn-primary" style="width: 300px;">Créer un compte</a>
+            <p>Déjà un compte ?</p>
+            <a href="{{ route('auth.login.show') }}" class="btn btn-outline" style="width: 300px;">Se connecter</a>
           </div>
-        @endeach
-      </div>
-    </section>
+        @endif
 
-  @else
-
-    {{-- Page visiteur (non connecté) --}}
-    <section class="feed-panel" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; gap:20px; border:none;">
-      <div style="font-size:80px; font-weight:800; line-height:1;">X</div>
-      <h1 style="font-size:2.5rem; font-weight:800; text-align:center;">Ça se passe maintenant</h1>
-      <h2 style="font-size:1.5rem; margin-bottom:10px;">Inscrivez-vous.</h2>
-      <a href="{{ route('auth.register.show') }}" class="btn btn-primary" style="width:300px; height:44px;">Créer un compte</a>
-      <p style="color:var(--muted-text);">Déjà un compte ?</p>
-      <a href="{{ route('auth.login.show') }}" class="btn btn-outline" style="width:300px; height:44px;">Se connecter</a>
-    </section>
-
-  @endif
-@end
+    </main>
+</body>
+</html>
