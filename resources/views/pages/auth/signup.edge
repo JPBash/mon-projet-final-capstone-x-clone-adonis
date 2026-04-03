@@ -1,36 +1,36 @@
 @layout()
   <div class="form-container">
+
+    <div style="text-align:center; font-size:32px; font-weight:800; margin-bottom:4px;">X</div>
     <div>
-      <h1> creer un compte </h1>
-      <p>
-        Entrer les informations ci-dessous pour creer votre compte
+      <h1 style="font-size:24px; font-weight:800;">Créer un compte</h1>
+      <p style="color:var(--muted-text); font-size:14px; margin-top:4px;">
+        Entrez les informations ci-dessous pour créer votre compte.
       </p>
     </div>
 
-    <div>
-      @form({ route: 'new_account.store', method: 'POST' })
-        <div>
-          @field.root({ name: 'fullName' })
-            @!field.label({ text: 'Full name' })
-            @!input.control()
-            @!field.error()
-          @end
-        </div>
-
-        <div>
-          @field.root({ name: 'email' })
-            @!field.label({ text: 'Email' })
-            @!input.control({ type: 'email', autocomplete: 'email' })
-            @!field.error()
-          @end
-        </div>
-
-        <!-- Mot de passe déplacé -->
-
-        <div>
-          @!button({ text: 'Sign up', type: 'submit' })
-        </div>
+    @form({ route: 'new_account.store', method: 'POST' })
+      @field.root({ name: 'fullName' })
+        @!field.label({ text: 'Nom complet' })
+        @!input.control({ autocomplete: 'name' })
+        @!field.error()
       @end
-    </div>
+
+      @field.root({ name: 'email' })
+        @!field.label({ text: 'Email' })
+        @!input.control({ type: 'email', autocomplete: 'email' })
+        @!field.error()
+      @end
+
+      <div>
+        @!button({ text: "S'inscrire", type: 'submit' })
+      </div>
+    @end
+
+    <p style="text-align:center; color:var(--muted-text); margin-top:16px;">
+      Déjà un compte ? 
+      <a href="{{ route('auth.login.show') }}" style="color:var(--twitter-blue); font-weight:700;">Se connecter</a>
+    </p>
+
   </div>
 @end

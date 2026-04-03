@@ -1,9 +1,12 @@
 @layout()
   <div class="form-container">
+
+    {{-- Logo X --}}
+    <div style="text-align:center; font-size:32px; font-weight:800; margin-bottom:4px;">X</div>
     <div>
-      <h1> Connectez-vous </h1>
-      <p>
-        Entrer votre email et votre mot de passe ci-dessous pour vous connecter
+      <h1 style="font-size:24px; font-weight:800;">Connectez-vous</h1>
+      <p style="color: var(--muted-text); font-size:14px; margin-top:4px;">
+        Entrez votre email et votre mot de passe pour vous connecter.
       </p>
     </div>
 
@@ -19,17 +22,27 @@
 
         <div>
           @field.root({ name: 'password' })
-            @!field.label({ text: 'Password' })
+            @!field.label({ text: 'Mot de passe' })
             @!input.control({ type: 'password' })
-            <a href="/forgot-password" style="font-size: 13px; color: #1d9bf0; text-decoration: none; margin-top: 5px; display: inline-block;">Mot de passe oublié ?</a>
+            <a href="/forgot-password" style="font-size:13px; color:var(--twitter-blue); text-decoration:none; margin-top:5px; display:inline-block;">
+              Mot de passe oublié ?
+            </a>
             @!field.error()
           @end
         </div>
 
         <div>
-          @!button({ text: 'Login', type: 'submit' })
+          @!button({ text: 'Se connecter', type: 'submit' })
         </div>
       @end
     </div>
+
+    <p style="text-align:center; color: var(--muted-text); margin-top:8px;">
+      Pas encore de compte ? 
+      <a href="{{ route('auth.register.show') }}" style="color:var(--twitter-blue); font-weight:700;">
+        S'inscrire
+      </a>
+    </p>
+
   </div>
 @end

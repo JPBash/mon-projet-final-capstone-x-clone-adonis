@@ -10,7 +10,8 @@
   --twitter-blue: #1d9bf0;
   --twitter-blue-hover: #1a8cd8;
   --heart-red: #f91880;
-  --bg-hover: #16181c; /* Pour les éléments cliquables au survol */
+  --bg-hover: #16181c;
+  /* Pour les éléments cliquables au survol */
 }
 
 * {
@@ -30,7 +31,8 @@
 body {
   background-color: var(--bg-color);
   color: var(--main-text);
-  font-size: 15px; /* Taille de police standard de X */
+  font-size: 15px;
+  /* Taille de police standard de X */
   line-height: 1.3;
   overflow-x: hidden;
 }
@@ -105,14 +107,16 @@ input[type='file'] {
    ========================================================================== */
 .app-shell {
   display: flex;
-  justify-content: center; /* Centre le contenu global */
+  justify-content: center;
+  /* Centre le contenu global */
 }
 
 .layout {
   display: grid;
   grid-template-columns: 275px minmax(0, 1fr) 350px;
   width: 100%;
-  max-width: 1260px; /* Largeur max de X */
+  max-width: 1260px;
+  /* Largeur max de X */
   margin: 0 auto;
   align-items: start;
 }
@@ -121,12 +125,14 @@ input[type='file'] {
    4. COLONNE 1 : SIDEBAR (GAUCHE)
    ========================================================================== */
 .sidebar {
-  width: 275px; /* Largeur exacte de X */
+  width: 275px;
+  /* Largeur exacte de X */
   padding: 0 12px;
   display: flex;
   flex-direction: column;
   border-right: 1px solid var(--border-color);
-  position: sticky; /* Reste fixe au scroll */
+  position: sticky;
+  /* Reste fixe au scroll */
   top: 0;
   height: 100vh;
 }
@@ -237,7 +243,8 @@ input[type='file'] {
 }
 
 .user-chip {
-  margin-top: auto; /* Pousse vers le bas */
+  margin-top: auto;
+  /* Pousse vers le bas */
   margin-bottom: 20px;
   display: flex;
   align-items: center;
@@ -275,8 +282,10 @@ input[type='file'] {
    ========================================================================== */
 .feed-panel,
 .profile-page {
-  flex: 1; /* Prend l'espace restant */
-  max-width: 600px; /* Largeur max du feed de X */
+  flex: 1;
+  /* Prend l'espace restant */
+  max-width: 600px;
+  /* Largeur max du feed de X */
   min-width: 0;
   min-height: 100vh;
   height: 100vh;
@@ -287,8 +296,10 @@ input[type='file'] {
 .feed-header {
   position: sticky;
   top: 0;
-  background-color: rgba(0, 0, 0, 0.85); /* Semi-transparent */
-  backdrop-filter: blur(10px); /* Flou derrière */
+  background-color: rgba(0, 0, 0, 0.85);
+  /* Semi-transparent */
+  backdrop-filter: blur(10px);
+  /* Flou derrière */
   z-index: 10;
 }
 
@@ -322,7 +333,8 @@ input[type='file'] {
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 56px; /* Petite ligne bleue centree */
+  width: 56px;
+  /* Petite ligne bleue centree */
   height: 4px;
   background-color: var(--twitter-blue);
   border-radius: 2px;
@@ -366,7 +378,8 @@ input[type='file'] {
 }
 
 .tweet:hover {
-  background-color: rgba(255, 255, 255, 0.03); /* Léger fond au survol */
+  background-color: rgba(255, 255, 255, 0.03);
+  /* Léger fond au survol */
 }
 
 .avatar {
@@ -443,15 +456,18 @@ input[type='file'] {
 
 .profile-avatar-wrap {
   position: relative;
-  height: 70px; /* Espace pour l'avatar qui depasse */
+  height: 70px;
+  /* Espace pour l'avatar qui depasse */
 }
 
 .avatar-xl {
   width: 140px;
   height: 140px;
-  border: 4px solid var(--bg-color); /* Contour noir */
+  border: 4px solid var(--bg-color);
+  /* Contour noir */
   position: absolute;
-  top: -70px; /* Depasse sur la couverture */
+  top: -70px;
+  /* Depasse sur la couverture */
   left: 16px;
   background-color: #000;
 }
@@ -763,5 +779,114 @@ html {
   .tweet,
   .tweet-box {
     padding: 12px;
+  }
+}
+
+/* ==========================================================================
+   MOBILE NAVIGATION (Bottom Nav, Header Mobile, FAB)
+   ========================================================================== */
+
+.mobile-header {
+  display: none;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 53px;
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+  border-top: 1px solid var(--border-color);
+  justify-content: space-around;
+  align-items: center;
+  /* Espace de sécurité sur iPhone (safe area) */
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Zone de clic : minimum 44×44px (standard Apple/Google) */
+.nav-icon-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  /* > 44px : OK */
+  height: 50px;
+  /* > 44px : OK */
+  color: var(--main-text);
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.nav-icon-link:hover {
+  background-color: var(--bg-hover);
+}
+
+.nav-icon-link svg {
+  width: 26px;
+  height: 26px;
+}
+
+/* FAB : positionné pour ne pas gêner la lecture */
+.fab {
+  display: none;
+  position: fixed;
+  bottom: 76px;
+  /* 60px barre + 16px marge = bien au-dessus */
+  right: 16px;
+  width: 56px;
+  height: 56px;
+  background-color: var(--twitter-blue);
+  color: white;
+  border-radius: 50%;
+  z-index: 99;
+  box-shadow: 0px 8px 28px rgba(0, 0, 0, 0.4);
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s, opacity 0.2s;
+}
+
+.fab:hover {
+  background-color: var(--twitter-blue-hover);
+}
+
+.fab svg {
+  width: 24px;
+  height: 24px;
+}
+
+@media (max-width: 768px) {
+
+  /* Compense la hauteur de la barre basse + safe area iPhone */
+  .layout {
+    padding-bottom: calc(60px + env(safe-area-inset-bottom));
+  }
+
+  /* Compense aussi le dernier tweet pour qu'il ne passe pas derrière le FAB */
+  .tweet:last-child {
+    padding-bottom: 80px;
+  }
+
+  .mobile-header,
+  .bottom-nav,
+  .fab {
+    display: flex;
+  }
+
+  .feed-header {
+    display: none;
   }
 }

@@ -1,21 +1,38 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clone X - Créer un compte</title>
     <link rel="stylesheet" href="/styles.css" />
 </head>
-<body class="welcome-layout">
-    <div class="auth-card">
-        <h2>Créer votre compte</h2>
-        <form  method="POST">
-            {{ csrfField() }}
-            
-            <input type="text" name="full_name" placeholder="Nom complet" required />
-            <input type="email" name="email" placeholder="Email" required />
-            <input type="password" name="password" placeholder="Mot de passe" required />
+<body>
+    <div class="form-container">
+        
+        {{-- Logo X --}}
+        <div style="text-align:center; font-size:32px; font-weight:800; margin-bottom:8px;">X</div>
+        <h2 style="font-size:24px; font-weight:800; margin-bottom:8px;">Créer votre compte</h2>
 
-            <button type="submit" class="btn btn-primary btn-wide">S'inscrire</button>
+        @if(flashMessages.has('errors'))
+          @each(error in flashMessages.get('errors'))
+            <p style="color: #f4212e; font-size:14px;">{{ error }}</p>
+          @end
+        @endif
+
+        <form action="{{ route('auth.register') }}" method="POST">
+            {{ csrfField() }}
+            <input type="text" name="full_name" placeholder="Nom complet" 
+                   value="{{ flashMessages.get('full_name') || '' }}" required />
+            <input type="email" name="email" placeholder="Email" 
+                   value="{{ flashMessages.get('email') || '' }}" required />
+            <input type="password" name="password" placeholder="Mot de passe" required />
+            <button type="submit" class="btn btn-primary" style="width:100%;">S'inscrire</button>
         </form>
-        <p>Déjà un compte ? <a href="/login">Se connecter</a></p>
+
+        <p style="text-align:center; color: var(--muted-text); margin-top:16px;">
+            Déjà un compte ? <a href="{{ route('auth.login.show') }}" 
+            style="color: var(--twitter-blue); font-weight:700;">Se connecter</a>
+        </p>
     </div>
 </body>
 </html>

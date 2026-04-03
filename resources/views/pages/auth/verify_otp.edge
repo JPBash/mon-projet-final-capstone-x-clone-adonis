@@ -1,26 +1,45 @@
-
+@layout()
   <div class="form-container">
+
+    {{-- Logo X --}}
+    <div style="text-align:center; font-size:32px; font-weight:800; margin-bottom:4px;">X</div>
+
     <div>
-      <h1> Vérification de votre E-mail </h1>
-      <p>
-        Entrez le code à 4 chiffres que vous avez reçu sur <strong>{{ email }}</strong>
+      <h1 style="font-size:24px; font-weight:800;">Vérification de votre e-mail</h1>
+      <p style="color: var(--muted-text); font-size:14px; margin-top:8px; line-height:1.5;">
+        Nous avons envoyé un code à 4 chiffres à<br/>
+        <strong style="color: var(--main-text);">{{ email }}</strong>
       </p>
     </div>
 
-    <div>
-      @form({ route: 'auth.verify_otp.store', method: 'POST' })
-        <div>
-          @field.root({ name: 'code' })
-            @!field.label({ text: 'Code à 4 chiffres' })
-            @!input.control({ type: 'text', maxlength: '4', autocomplete: 'off' })
-            @!field.error()
-          @end
-        </div>
+    @form({ route: 'auth.verify_otp.store', method: 'POST' })
 
-        <div>
-          @!button({ text: 'Vérifier', type: 'submit' })
-        </div>
+      {{-- Champ OTP stylisé --}}
+      @field.root({ name: 'code' })
+        @!field.label({ text: 'Code à 4 chiffres' })
+        @!input.control({
+          type: 'text',
+          maxlength: '4',
+          autocomplete: 'one-time-code',
+          inputmode: 'numeric',
+          pattern: '[0-9]*',
+          style: 'font-size:28px; letter-spacing:12px; text-align:center; font-weight:700;'
+        })
+        @!field.error()
       @end
-    </div>
+
+      <div>
+        @!button({ text: 'Vérifier', type: 'submit' })
+      </div>
+
+    @end
+
+    <p style="text-align:center; color: var(--muted-text); font-size:13px; margin-top:12px;">
+      Vous n'avez pas reçu de code ?
+      <a href="{{ route('auth.login.show') }}" style="color:var(--twitter-blue); font-weight:700;">
+        Réessayer
+      </a>
+    </p>
+
   </div>
 @end
