@@ -10,6 +10,26 @@
     <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
+
+    {{-- ===== HEADER MOBILE (visible uniquement sur mobile < 768px) ===== --}}
+    @if(auth.user)
+    <header class="mobile-header">
+        <div class="avatar" style="width:32px;height:32px;">
+            @if(auth.user.avatarUrl)
+              <img src="{{ auth.user.avatarUrl }}" alt="Avatar">
+            @else
+              <div class="avatar-placeholder">{{ auth.user.fullName.charAt(0) }}</div>
+            @endif
+        </div>
+        <span style="font-size:22px;font-weight:800;position:absolute;left:50%;transform:translateX(-50%);">X</span>
+        <a href="{{ route('tweets.search') }}" class="nav-icon-link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+        </a>
+    </header>
+    @endif
+
     <main id="app" class="app-shell">
         
         @if(auth.user)
@@ -89,7 +109,7 @@
               </header>
 
               {{-- Boîte de publication --}}
-               <form action="{{ route('tweets.store') }}" method="POST" class="tweet-box">
+               <form action="{{ route('tweets.store') }}" method="POST" class="tweet-box" id="composer">
                  {{ csrfField() }}
                  <div class="avatar">
                     @if(auth.user.avatarUrl)
@@ -133,7 +153,6 @@
               {{-- Liste des Tweets --}}
               <div id="feed-list" class="tweet-list">
                 @each(tweet in tweets)
-                  {{-- Indicateur de retweet --}}
                   @if(tweet.retweetId)
                     <div style="padding: 4px 16px 0 52px; font-size: 13px; color: var(--muted-text); font-weight: 700;">
                         🔁 {{ tweet.user.fullName }} a retweeté
@@ -142,7 +161,6 @@
 
                   <div class="tweet">
                     <div class="avatar">
-                      {{-- Si c'est un retweet, on affiche l'avatar de l'auteur ORIGINAL --}}
                       @assign(displayTweet = tweet.retweet || tweet)
                       <a href="{{ route('profile.user.show', { id: displayTweet.user.id }) }}">
                         @if(displayTweet.user.avatarUrl)
@@ -228,7 +246,7 @@
             </aside>
           </div>
         @else
-          {{-- Page de connexion/inscription pour les visiteurs --}}
+          {{-- Page d'accueil pour les visiteurs --}}
           <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; width: 100%; gap: 20px;">
             <div class="brand" style="font-size: 80px; margin-bottom: 20px;">X</div>
             <h1 style="font-size: 3rem; font-weight: 800;">Ça se passe maintenant</h1>
@@ -240,5 +258,28 @@
         @endif
 
     </main>
+
+    {{-- ===== NAVIGATION BASSE MOBILE (visible uniquement sur mobile < 768px) ===== --}}
+    @if(auth.user)
+    <nav class="bottom-nav">
+        <a href="{{ route('home') }}" class="nav-icon-link" title="Accueil">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        </a>
+        <a href="{{ route('tweets.search') }}" class="nav-icon-link" title="Recherche">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+        </a>
+        <a href="{{ route('profile.show') }}" class="nav-icon-link" title="Profil">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+        </a>
+    </nav>
+
+    {{-- Bouton flottant pour tweeter (FAB) --}}
+    <a href="#composer" class="fab" title="Tweeter">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+    </a>
+    @endif
+
 </body>
 </html>
