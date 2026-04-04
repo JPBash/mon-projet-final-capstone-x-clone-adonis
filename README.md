@@ -1,52 +1,69 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/MnaD0mWv)
+# 𝕏 Clone - AdonisJS 6 & Edge
 
-//- X-Clone - TP AdonisJS 6
+Bienvenue sur le projet **Clone X**, une application web fullstack moderne inspirée du réseau social X (Twitter), développée avec **AdonisJS 6** et le moteur de rendu **Edge**.
 
-Clone full-stack de X (Twitter) réalisé avec **AdonisJS 6**.
+Ce projet a été réalisé dans le cadre de la formation **Kadea Academy** par l'agence **NovaTech**.
 
-## Fonctionnalités
+## 🚀 Fonctionnalités Principales
 
-### Profil & Personnalisation
+### 👤 Gestion des Comptes
+- **Authentification sécurisée** : Inscription, Connexion et Déconnexion.
+- **Vérification par Email (OTP)** : Sécurisation des comptes via un code unique envoyé par email.
+- **Profil Utilisateur** : Personnalisation de l'avatar, de la bannière, de la biographie et du pseudo.
 
-- **Édition complète** : Bio, Avatar et Bannière.
-- **Design X** : Avatar chevauchant et header sticky (flou).
-- **Stats** : Compteurs dynamiques via relations Lucid.
+### 🐦 Social & Interaction
+- **Tweets & Réponses** : Publication de textes (280 car.), réponses en cascade (thread) et suppression de ses propres tweets.
+- **Système de Follow** : Suivre et se désabonner des autres utilisateurs.
+- **Likes & Retweets** : Interagir avec le contenu et voir les compteurs en temps réel.
+- **Recherche** : Recherche globale d'utilisateurs et de tweets, navigation par **Hashtags**.
 
-### Micro-blogging
+### 🔒 Confidentialité & Sécurité
+- **Blocage d'utilisateurs** : Empêcher mutuellement la vue des tweets et du profil.
+- **Compte Privé** : Verrouiller son profil pour n'autoriser que les abonnés approuvés (système de demandes d'abonnement).
+- **Middleware de Sécurité** : Accès restreint aux fonctionnalités sociales pour les comptes non vérifiés.
 
-- **Tweets** : Publication (280 car.) et suppression sécurisée.
-- **Flux** : Onglets "Pour vous" vs "Abonnements".
-- **Interactions** : Système de Likes avec retour visuel.
+### 🤖 Intelligence Artificielle (Grok)
+- **Générateur de Tweet** : Assistance à la rédaction basée sur votre contexte.
+- **Suggestion de Hashtags** : Extraction intelligente des mots-clés.
+- **Analyse d'Engagement** : Statistiques détaillées sur vos performances (engagement moyen, top tweet).
 
-### Sécurité
+## 🛠️ Installation & Lancement
 
-- **Auth** : Sessions gérées via Adonis Auth.
-- **Protection** : Middlewares sur les routes sensibles.
-- **REST** : Utilisation du Method Spoofing (`_method`).
+1. **Cloner le projet** :
+   ```bash
+   git clone <url-du-repo>
+   cd capstone-x-clone-adonis-JPBash
+   ```
 
-// Installation rapide
-
-1. Setup :
-   Terminal : bash
-   git clone <URL> && cd x-clone
+2. **Installer les dépendances** :
+   ```bash
    npm install
-   2.Config :
+   ```
 
-Bash
-cp .env.example .env
-node ace generate:key
+3. **Configurer l'environnement** :
+   Copiez le fichier `.env.example` en `.env` et configurez votre base de données PostgreSQL.
 
-3.DB et Run :
+4. **Lancer les migrations et les données de test** :
+   ```bash
+   node ace migration:run
+   node ace db:seed
+   ```
 
-Bash
-node ace migration:run
-npm run dev
+5. **Lancer le serveur de développement** :
+   ```bash
+   npm run dev
+   ```
 
-// Stack
-Backend : AdonisJS 6 (Lucid, Edge)
+## 🧪 Identifiants de Test (Seeders)
 
-Frontend : CSS3 (Flexbox, Variables), JS Vanilla
+Utilisez ces comptes pour tester rapidement l'application après avoir lancé le seeder :
 
-DB : SQLite | Médias : Stockage local (/uploads)
+| Rôle | Email | Mot de passe | État |
+| :--- | :--- | :--- | :--- |
+| **Admin** | `admin@test.com` | `password123` | Vérifié / Public |
+| **Elon** | `elon@x.com` | `password123` | Vérifié / Privé |
+| **Visiteur** | `guest@test.com` | `password123` | Non Vérifié |
 
-Développé par BASHIZI MULUNGE Jean-Pierre - Kadea Academy DevSoir25
+---
+
+Développé avec ❤️ par **Bashizi Jean-Pierre** (@JPBash) pour NovaTech.

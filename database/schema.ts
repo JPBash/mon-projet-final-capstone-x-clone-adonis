@@ -7,8 +7,23 @@
 import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
+export class BlockSchema extends BaseModel {
+  static $columns = ['id', 'blockerId', 'blockedId', 'createdAt', 'updatedAt'] as const
+  $columns = BlockSchema.$columns
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare blockerId: number | null
+  @column()
+  declare blockedId: number | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime | null
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
 export class FollowSchema extends BaseModel {
-  static $columns = ['id', 'followerId', 'followingId', 'createdAt'] as const
+  static $columns = ['id', 'followerId', 'followingId', 'createdAt', 'status'] as const
   $columns = FollowSchema.$columns
   @column({ isPrimary: true })
   declare id: number
@@ -18,6 +33,8 @@ export class FollowSchema extends BaseModel {
   declare followingId: number | null
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime | null
+  @column()
+  declare status: string
 }
 
 export class HashtagTweetSchema extends BaseModel {
@@ -62,15 +79,7 @@ export class LikeSchema extends BaseModel {
 }
 
 export class TweetSchema extends BaseModel {
-  static $columns = [
-    'id',
-    'userId',
-    'content',
-    'createdAt',
-    'updatedAt',
-    'parentId',
-    'retweetId',
-  ] as const
+  static $columns = ['id', 'userId', 'content', 'createdAt', 'updatedAt', 'parentId', 'retweetId'] as const
   $columns = TweetSchema.$columns
   @column({ isPrimary: true })
   declare id: number
@@ -89,18 +98,7 @@ export class TweetSchema extends BaseModel {
 }
 
 export class UserSchema extends BaseModel {
-  static $columns = [
-    'id',
-    'fullName',
-    'email',
-    'password',
-    'createdAt',
-    'updatedAt',
-    'avatarUrl',
-    'coverUrl',
-    'bio',
-    'isEmailVerified',
-  ] as const
+  static $columns = ['id', 'fullName', 'email', 'password', 'createdAt', 'updatedAt', 'avatarUrl', 'coverUrl', 'bio', 'isEmailVerified', 'isPrivate'] as const
   $columns = UserSchema.$columns
   @column({ isPrimary: true })
   declare id: number
@@ -122,4 +120,6 @@ export class UserSchema extends BaseModel {
   declare bio: string | null
   @column()
   declare isEmailVerified: boolean
+  @column()
+  declare isPrivate: boolean
 }

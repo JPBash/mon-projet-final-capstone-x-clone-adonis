@@ -18,20 +18,6 @@ router
     // Route de soumission du formulaire d'inscription (Stockage Infos + Envoi mail)
     router.post('signup', [controllers.NewAccount, 'store']).as('new_account.store')
 
-    // Routes de vérification OTP
-    router.get('signup/verify', [controllers.NewAccount, 'verifyShow']).as('auth.verify_otp.show')
-    router
-      .post('signup/verify', [controllers.NewAccount, 'verifyStore'])
-      .as('auth.verify_otp.store')
-
-    // Routes de création de mot de passe finaux
-    router
-      .get('signup/password', [controllers.NewAccount, 'passwordShow'])
-      .as('auth.create_password.show')
-    router
-      .post('signup/password', [controllers.NewAccount, 'passwordStore'])
-      .as('auth.create_password.store')
-
     // Routes de connexion
     router.get('login', [controllers.Session, 'create']).as('auth.login.show')
     router.post('login', [controllers.Session, 'store']).as('session.store')
@@ -51,7 +37,25 @@ router
       .as('auth.reset_password.store')
   })
   .use(middleware.guest())
-//  Groupe pour les connectés
+
+// Routes accessibles sans VerifiedMiddleware (pour pouvoir vérifier son compte)
+router.group(() => {
+    // Routes de vérification OTP
+    router.get('signup/verify', [controllers.NewAccount, 'verifyShow']).as('auth.verify_otp.show')
+    router
+      .post('signup/verify', [controllers.NewAccount, 'verifyStore'])
+      .as('auth.verify_otp.store')
+
+    // Routes de création de mot de passe finaux (si non géré dans verifyStore)
+    router
+      .get('signup/password', [controllers.NewAccount, 'passwordShow'])
+      .as('auth.create_password.show')
+    router
+      .post('signup/password', [controllers.NewAccount, 'passwordStore'])
+      .as('auth.create_password.store')
+}).use(middleware.auth())
+
+//  Groupe pour les connectés ET vérifiés
 router
   .group(() => {
     router.get('/profile', [RegisterController, 'showProfile']).as('profile.show')
@@ -73,23 +77,32 @@ router
     router.post('grok/generate', [GrokController, 'generate']).as('grok.generate')
     router.post('grok/hashtags', [GrokController, 'hashtags']).as('grok.hashtags')
     router.get('grok/analyze', [GrokController, 'analyze']).as('grok.analyze')
+
+    // --- NOUVELLES ROUTES DE BLOCAGE ---
+    router.post('/profile/:id/block', '#controllers/profiles/blocks_controller.store').as('profile.block')
+    router.delete('/profile/:id/block', '#controllers/profiles/blocks_controller.destroy').as('profile.unblock')
+
+    // --- NOUVELLES ROUTES DE DEMANDES D'ABONNEMENT ---
+    router.get('/profile/requests', '#controllers/profiles/follow_requests_controller.index').as('profile.requests')
+    router.post('/profile/requests/:id/accept', '#controllers/profiles/follow_requests_controller.accept').as('profile.requests.accept')
+    router.post('/profile/requests/:id/reject', '#controllers/profiles/follow_requests_controller.reject').as('profile.requests.reject')
   })
-  .use(middleware.auth())
+  .use([middleware.auth(), middleware.verified()])
 
 router
   .delete('/tweets/:id', '#controllers/tweets/destroys_controller.handle')
   .as('tweets.destroy')
 
-  .use(middleware.auth())
+  .use([middleware.auth(), middleware.verified()])
 router
   .post('/tweets/:id/like', '#controllers/tweets/likes_controller.handle')
   .as('tweets.like')
-  .use(middleware.auth())
+  .use([middleware.auth(), middleware.verified()])
 
 router
   .post('/profile/:id/follow', '#controllers/profiles/follows_controller.handle')
   .as('profile.follow')
-  .use(middleware.auth())
+  .use([middleware.auth(), middleware.verified()])
 
 router.get('/profile/:id', [RegisterController, 'showUserProfile']).as('profile.user.show')
 

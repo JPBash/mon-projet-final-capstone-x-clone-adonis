@@ -14,6 +14,8 @@ export const controllers = {
   PasswordResets: () => import('#controllers/password_resets_controller'),
   profiles: {
     Follow: () => import('#controllers/profiles/follow_controller'),
+    Blocks: () => import('#controllers/profiles/blocks_controller'),
+    FollowRequests: () => import('#controllers/profiles/follow_requests_controller'),
   },
   Session: () => import('#controllers/session_controller'),
   tweets: {

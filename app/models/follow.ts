@@ -13,6 +13,9 @@ export default class Follow extends BaseModel {
   @column()
   declare followingId: number // Celui qui est suivi
 
+  @column()
+  declare status: 'pending' | 'accepted'
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 

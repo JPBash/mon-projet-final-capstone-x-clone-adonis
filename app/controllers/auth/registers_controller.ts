@@ -13,14 +13,26 @@ export default class RegisterController {
     const user = auth.user
     if (!user) return view.render('pages/home', { tweets: [] })
 
-    // On récupère les IDs des personnes suivies
-    const followingRow = await user.related('following').query().select('following_id')
+    // On récupère les IDs des personnes suivies avec status 'accepted'
+    const followingRow = await user.related('following').query()
+      .where('status', 'accepted')
+      .select('following_id')
     const followedIds = followingRow.map((f) => f.followingId)
 
-    const tab = request.input('tab', 'following') // On force l'affichage 'following' ou on l'ignore selon le design
+    // On récupère les IDs des personnes bloquées (par moi ou qui m'ont bloqué)
+    const blockingRow = await user.related('blocking').query().select('blocked_id')
+    const blockingIds = blockingRow.map((b) => b.blockedId)
+
+    const blockedByRow = await user.related('blockedBy').query().select('blocker_id')
+    const blockedByIds = blockedByRow.map((b) => b.blockerId)
+
+    const excludedIds = [...new Set([...blockingIds, ...blockedByIds])]
+
+    const tab = request.input('tab', 'following')
 
     const query = Tweet.query()
       .whereIn('userId', followedIds)
+      .whereNotIn('userId', excludedIds)
       .whereNull('parentId') // On n'affiche pas les réponses isolées sur l'accueil
       .preload('user')
       .preload('likes')
@@ -51,27 +63,48 @@ export default class RegisterController {
       .withCount('following')
       .firstOrFail()
 
-    const tweets = await user
-      .related('tweets')
-      .query()
-      .preload('user')
-      .preload('retweet', (q) => q.preload('user'))
-      .withCount('likes')
-      .withCount('replies')
-      .withCount('retweets')
-      .orderBy('createdAt', 'desc')
-
     let isFollowing = false
+    let isBlocking = false
+    let isBlocked = false
+    let isPending = false
+
     if (auth.user) {
-      const follow = await auth.user
-        .related('following')
-        .query()
-        .where('following_id', user.id)
-        .first()
-      isFollowing = !!follow
+      const me = auth.user
+      const follow = await me.related('following').query().where('following_id', user.id).first()
+      isFollowing = follow?.status === 'accepted'
+      isPending = follow?.status === 'pending'
+
+      const block = await me.related('blocking').query().where('blocked_id', user.id).first()
+      isBlocking = !!block
+
+      const blockedBy = await me.related('blockedBy').query().where('blocker_id', user.id).first()
+      isBlocked = !!blockedBy
     }
 
-    return view.render('pages/profile', { user, tweets, isFollowing })
+    let tweets: Tweet[] = []
+    // On affiche les tweets si : 
+    // 1. On n'est pas bloqué
+    // 2. ET (Le compte n'est pas privé OU on est déjà abonné OU c'est notre propre compte)
+    if (!isBlocked && (!user.isPrivate || isFollowing || (auth.user && user.id === auth.user.id))) {
+      tweets = await user
+        .related('tweets')
+        .query()
+        .preload('user')
+        .preload('retweet', (q) => q.preload('user'))
+        .withCount('likes')
+        .withCount('replies')
+        .withCount('retweets')
+        .orderBy('createdAt', 'desc')
+    }
+
+    return view.render('pages/profile', { 
+      user, 
+      tweets, 
+      isFollowing, 
+      isBlocking, 
+      isBlocked, 
+      isPending 
+    })
   }
   public async showProfile({ view, auth }: HttpContext) {
     const user = auth.user!
@@ -111,20 +144,42 @@ export default class RegisterController {
     }
 
     user.bio = request.input('bio')
+    user.isPrivate = !!request.input('isPrivate')
+    await user.save()
     await user.save()
     return response.redirect().back()
   }
 
-  async showFollowers({ params, view }: HttpContext) {
+  async showFollowers({ params, view, auth, response }: HttpContext) {
     const user = await User.findOrFail(params.id)
-    const followersRows = await user.related('followers').query().preload('follower')
+    const me = auth.user
+
+    const isOwner = me?.id === user.id
+    const follow = me ? await me.related('following').query().where('following_id', user.id).where('status', 'accepted').first() : null
+    const isAcceptedFollower = !!follow
+
+    if (user.isPrivate && !isOwner && !isAcceptedFollower) {
+        return response.redirect().toRoute('profile.user.show', { id: user.id })
+    }
+
+    const followersRows = await user.related('followers').query().where('status', 'accepted').preload('follower')
     const users = followersRows.map((f) => f.follower)
     return view.render('pages/profiles/follows_list', { user, users, title: 'Abonnés' })
   }
 
-  async showFollowing({ params, view }: HttpContext) {
+  async showFollowing({ params, view, auth, response }: HttpContext) {
     const user = await User.findOrFail(params.id)
-    const followingRows = await user.related('following').query().preload('following')
+    const me = auth.user
+
+    const isOwner = me?.id === user.id
+    const follow = me ? await me.related('following').query().where('following_id', user.id).where('status', 'accepted').first() : null
+    const isAcceptedFollower = !!follow
+
+    if (user.isPrivate && !isOwner && !isAcceptedFollower) {
+        return response.redirect().toRoute('profile.user.show', { id: user.id })
+    }
+
+    const followingRows = await user.related('following').query().where('status', 'accepted').preload('following')
     const users = followingRows.map((f) => f.following)
     return view.render('pages/profiles/follows_list', { user, users, title: 'Abonnements' })
   }

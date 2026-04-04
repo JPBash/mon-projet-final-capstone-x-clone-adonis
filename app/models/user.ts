@@ -7,6 +7,7 @@ import type { HasMany } from '@adonisjs/lucid/types/relations'
 import Tweet from '#models/tweet'
 import Like from '#models/like'
 import Follow from './follow.ts'
+import Block from '#models/block'
 
 const AuthFinder = withAuthFinder(hash, {
   uids: ['email'],
@@ -38,6 +39,9 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column()
   declare isEmailVerified: boolean
 
+  @column()
+  declare isPrivate: boolean
+
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 
@@ -66,4 +70,10 @@ export default class User extends compose(BaseModel, AuthFinder) {
 
   @hasMany(() => Follow, { foreignKey: 'followingId' })
   declare followers: HasMany<typeof Follow> // Les gens qui ME suivent
+
+  @hasMany(() => Block, { foreignKey: 'blockerId' })
+  declare blocking: HasMany<typeof Block> // Les gens que JE bloque
+
+  @hasMany(() => Block, { foreignKey: 'blockedId' })
+  declare blockedBy: HasMany<typeof Block> // Les gens qui ME bloquent
 }

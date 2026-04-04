@@ -111,9 +111,38 @@
                   </div>
                 </div>
 
-                {{-- Boutons d'édition --}}
-                <div style="display: flex; justify-content: flex-end; padding: 12px 0;">
-                   <button class="btn btn-outline" onclick="document.getElementById('edit-form').style.display='block'">Éditer le profil</button>
+                {{-- Boutons d'édition / Action --}}
+                <div style="display: flex; justify-content: flex-end; gap: 10px; padding: 12px 0;">
+                  @if(user.id === auth.user.id)
+                    <button class="btn btn-outline" onclick="document.getElementById('edit-form').style.display='block'">Éditer le profil</button>
+                  @else
+                    {{-- Bouton Suivre / Attente --}}
+                    <form action="{{ route('profile.follow', { id: user.id }) }}" method="POST">
+                      {{ csrfField() }}
+                      <button type="submit" class="btn {{ isFollowing ? 'btn-outline' : (isPending ? 'btn-secondary' : 'btn-primary') }}">
+                        @if(isFollowing)
+                          Désabonner
+                        @elseif(isPending)
+                          Attente...
+                        @else
+                          Suivre
+                        @endif
+                      </button>
+                    </form>
+
+                    {{-- Bouton Bloquer --}}
+                    @if(isBlocking)
+                      <form action="{{ route('profile.unblock', { id: user.id }) }}?_method=DELETE" method="POST">
+                        {{ csrfField() }}
+                        <button type="submit" class="btn btn-danger">Débloquer</button>
+                      </form>
+                    @else
+                      <form action="{{ route('profile.block', { id: user.id }) }}" method="POST">
+                        {{ csrfField() }}
+                        <button type="submit" class="btn btn-outline-danger">Bloquer</button>
+                      </form>
+                    @endif
+                  @endif
                 </div>
 
                 @if(flashMessages.has('grok_result'))
@@ -122,7 +151,11 @@
                     <strong>{{ grok.title }}</strong>
                     <p>{{ grok.text }}</p>
                     @if(grok.tags && grok.tags.length)
-                      <div class="grok-tags">{{ grok.tags.join(' ') }}</div>
+                      <div class="grok-tags">
+                        @each(tag in grok.tags)
+                          <a href="/hashtag/{{ tag.substring(1) }}" class="hashtag-link">{{ tag }}</a>
+                        @endeach
+                      </div>
                     @endif
                   </div>
                 @endif
@@ -142,43 +175,78 @@
                   </div>
                 @endif
 
-                <h2>{{ auth.user.fullName }}</h2>
-                <p class="muted">{{ auth.user.email }}</p>
-                
-                @if(auth.user.bio)
-                  <p style="margin-top: 12px;">{{ auth.user.bio }}</p>
-                @endif
-
-                <div class="stats">
-                  <a href="{{ route('profile.following', { id: user.id }) }}">
-                    <strong>{{ user.$extras.following_count || '0' }}</strong> Abonnements
-                  </a>
-                  <a href="{{ route('profile.followers', { id: user.id }) }}">
-                    <strong>{{ user.$extras.followers_count || '0' }}</strong> Abonnés
-                  </a>
-                </div>
-              </div>
-
-              <div id="edit-form" style="display: none; padding: 16px; border-bottom: 1px solid var(--border-color);">
-                <form action="{{ route('profile.update') }} " method="POST" enctype="multipart/form-data" class="profile-edit-photos">
-                  {{ csrfField() }}
-                  <label>Changer l'avatar :</label>
-                  <input type="file" name="avatar" accept="image/*">
+                @if(!isBlocked)
+                  <h2>{{ user.fullName }}</h2>
+                  <p class="muted">{{ user.email }}</p>
                   
-                  <label>Changer la couverture :</label>
-                  <input type="file" name="cover" accept="image/*">
+                  @if(user.bio)
+                    <p style="margin-top: 12px;">{{ user.bio }}</p>
+                  @endif
 
-                  <label>Biographie :</label>
-                  <textarea name="bio" placeholder="Racontez votre histoire...">{{ auth.user.bio || '' }}</textarea>
-
-                  <div style="display: flex; gap: 10px; margin-top: 10px;">
-                    <button type="submit" class="btn btn-primary">Enregistrer</button>
-                    <button type="button" class="btn btn-outline" onclick="document.getElementById('edit-form').style.display='none'">Annuler</button>
+                  <div class="stats">
+                    <a href="{{ route('profile.following', { id: user.id }) }}">
+                      <strong>{{ user.$extras.following_count || '0' }}</strong> Abonnements
+                    </a>
+                    <a href="{{ route('profile.followers', { id: user.id }) }}">
+                      <strong>{{ user.$extras.followers_count || '0' }}</strong> Abonnés
+                    </a>
                   </div>
-                </form>
+
+                  @if(user.id === auth.user.id)
+                    <div style="margin-top: 10px;">
+                      <a href="{{ route('profile.requests') }}" class="btn btn-outline" style="font-size: 13px; padding: 5px 15px;">Voir les demandes d'abonnement</a>
+                    </div>
+                  @endif
+
+                  @if(user.isPrivate && !isFollowing && user.id !== auth.user.id)
+                    <div class="private-message" style="text-align: center; padding: 40px 20px; border-top: 1px solid var(--border-color); margin-top: 20px;">
+                      <div style="font-size: 3rem; margin-bottom: 10px;">🔒</div>
+                      <h2>Ces posts sont protégés</h2>
+                      <p class="muted">Seuls les abonnés approuvés peuvent voir les posts de {{ user.fullName }}.</p>
+                    </div>
+                  @endif
+                @else
+                  <div class="blocked-message">
+                    <h2>Ce compte vous a bloqué</h2>
+                    <p class="muted">Vous ne pouvez plus suivre cet utilisateur ni voir ses tweets.</p>
+                  </div>
+                @endif
               </div>
 
-              <div class="profile-tweets-title">Mes Posts</div>
+              @if(user.id === auth.user.id)
+                <div id="edit-form" style="display: none; padding: 16px; border-bottom: 1px solid var(--border-color);">
+                  <form action="{{ route('profile.update') }} " method="POST" enctype="multipart/form-data" class="profile-edit-photos">
+                    {{ csrfField() }}
+                    <label>Changer l'avatar :</label>
+                    <input type="file" name="avatar" accept="image/*">
+                    
+                    <label>Changer la couverture :</label>
+                    <input type="file" name="cover" accept="image/*">
+
+                    <label>Biographie :</label>
+                    <textarea name="bio" placeholder="Racontez votre histoire...">{{ auth.user.bio || '' }}</textarea>
+
+                    <label style="display: flex; align-items: center; gap: 10px; margin-top: 10px; cursor: pointer;">
+                      <input type="checkbox" name="isPrivate" {{ auth.user.isPrivate ? 'checked' : '' }}>
+                      Compte privé (approbation requise pour les nouveaux abonnés)
+                    </label>
+
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                      <button type="submit" class="btn btn-primary">Enregistrer</button>
+                      <button type="button" class="btn btn-outline" onclick="document.getElementById('edit-form').style.display='none'">Annuler</button>
+                    </div>
+                  </form>
+                </div>
+              @endif
+
+              @if(!isBlocked && isBlocking)
+                <div class="blocked-message" style="border-bottom: 1px solid var(--border-color); padding: 20px;">
+                  <p>Vous avez bloqué cet utilisateur.</p>
+                  <p class="muted">Voulez-vous vraiment voir ses posts ?</p>
+                </div>
+              @endif
+
+              <div class="profile-tweets-title">Posts</div>
 
               <div class="tweet-list">
                 @each(tweet in tweets)
@@ -206,7 +274,7 @@
                       </div>
                       
                       <a href="{{ route('tweets.show', { id: displayTweet.id }) }}" style="text-decoration: none; color: inherit;">
-                        <p>{{ displayTweet.content || '' }}</p>
+                        <p>{{{ displayTweet.content ? displayTweet.content.replace(/#(\w+)/g, '<a href="/hashtag/$1" class="hashtag-link">#$1</a>') : '' }}}</p>
                       </a>
 
                       <div class="tweet-footer">
@@ -240,10 +308,10 @@
             </section>
 
             {{-- Panel Droit --}}
-            <aside class="right-panel">
-              <div class="search-box">
-                <input type="text" placeholder="Chercher" />
-              </div>
+            <aside class="right-panel"> 
+                <form action="{{ route('tweets.search') }}" method="GET" class="search-box">
+                <input type="text" name="q" placeholder="Rechercher" value="{{ query || '' }}" />
+                </form>
               <div class="card">
                 <h3>Suggestions</h3>
                 <p class="muted" style="font-size: 13px;">Bientôt disponible...</p>
@@ -251,7 +319,6 @@
             </aside>
           </div>
         @endif
-
     </main>
 
     {{-- ===== NAVIGATION BASSE MOBILE (visible uniquement sur mobile < 768px) ===== --}}

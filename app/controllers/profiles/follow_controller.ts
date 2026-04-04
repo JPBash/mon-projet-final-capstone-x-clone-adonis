@@ -22,6 +22,7 @@ export default class FollowsController {
       await Follow.create({
         followerId: me.id,
         followingId: userToFollow.id,
+        status: userToFollow.isPrivate ? 'pending' : 'accepted'
       })
     }
 

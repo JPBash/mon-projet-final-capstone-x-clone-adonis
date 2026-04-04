@@ -1,18 +1,16 @@
 @layout('layouts/main')
-@set('title', 'Résultats pour "' + query + '"')
 
-<div class="feed-header">
-    <h1 class="feed-title">Recherche : {{ query }}</h1>
-</div>
-
-<div class="search-tabs" style="display: flex; border-bottom: 1px solid var(--border-color);">
-    <button class="search-tab active" onclick="showTab('tweets')" style="flex: 1; padding: 15px; background: none; border: none; color: white; cursor: pointer; border-bottom: 4px solid var(--primary-color);">Posts</button>
-    <button class="search-tab" onclick="showTab('users')" style="flex: 1; padding: 15px; background: none; border: none; color: var(--muted-text); cursor: pointer;">Comptes</button>
-</div>
+<header class="feed-header">
+    <h2 style="padding: 12px 16px;">Recherche : {{ query }}</h2>
+    <div class="tabs">
+        <div id="tab-posts" class="tab active" onclick="showTab('tweets')">Posts</div>
+        <div id="tab-users" class="tab" onclick="showTab('users')">Comptes</div>
+    </div>
+</header>
 
 <div id="tweets-results" class="tab-content">
     @each(tweet in tweets)
-      @assign(displayTweet = tweet.retweet || tweet)
+      @let(displayTweet = tweet.retweet || tweet)
       <div class="tweet">
         <div class="avatar">
           <a href="{{ route('profile.user.show', { id: displayTweet.user.id }) }}">
@@ -24,14 +22,12 @@
           </a>
         </div>
         <div class="tweet-content">
-          <div style="display: flex; justify-content: space-between;">
-            <div>
-              <strong>{{ displayTweet.user.fullName }}</strong>
-              <span class="muted">{{ displayTweet.user.email }}</span>
-            </div>
+          <div>
+            <strong>{{ displayTweet.user.fullName }}</strong>
+            <span class="muted">{{ displayTweet.user.email }}</span>
           </div>
           <a href="{{ route('tweets.show', { id: displayTweet.id }) }}" style="text-decoration: none; color: inherit;">
-            <p style="margin-top: 5px; font-size: 15px;">{{{ displayTweet.content ? displayTweet.content.replace(/#(\w+)/g, '<a href="/hashtag/$1" style="color: var(--primary-color); text-decoration: none;">#$1</a>') : '' }}}</p>
+            <p style="margin-top: 5px;">{{{ displayTweet.content ? displayTweet.content.replace(/#(\w+)/g, '<a href="/hashtag/$1" class="hashtag-link">#$1</a>') : '' }}}</p>
           </a>
           <div class="tweet-footer">
             <span class="tweet-action">💬 {{ displayTweet.$extras.replies_count || 0 }}</span>
@@ -42,16 +38,17 @@
       </div>
     @else
       <div style="padding: 40px; text-align: center; color: var(--muted-text);">
-        Aucun tweet trouvé.
+        <p style="font-size: 15px;">Désolé, nous n'avons rien trouvé pour "{{ query }}".</p>
+        <p style="font-size: 13px; margin-top: 8px;">Essayez avec d'autres mots-clés.</p>
       </div>
     @endeach
 </div>
 
 <div id="users-results" class="tab-content" style="display: none;">
     @each(user in users)
-      <div class="user-card" style="display: flex; align-items: center; padding: 15px; border-bottom: 1px solid var(--border-color); justify-content: space-between;">
-        <div style="display: flex; align-items: center;">
-            <div class="avatar" style="margin-right: 12px;">
+      <div class="tweet" style="align-items: center; justify-content: space-between;">
+        <div style="display: flex; gap: 12px; align-items: center;">
+            <div class="avatar">
                 @if(user.avatarUrl)
                   <img src="{{ user.avatarUrl }}" alt="Avatar">
                 @else
@@ -59,43 +56,36 @@
                 @endif
             </div>
             <div>
-                <a href="{{ route('profile.user.show', { id: user.id }) }}" style="text-decoration: none; color: white; font-weight: bold;">
+                <a href="{{ route('profile.user.show', { id: user.id }) }}" style="font-weight: bold;">
                     {{ user.fullName }}
                 </a>
-                <p class="muted" style="margin: 0;">{{ user.email }}</p>
+                <p class="muted">{{ user.email }}</p>
             </div>
         </div>
         @if(user.id !== auth.user.id)
             <form action="{{ route('profile.follow', { id: user.id }) }}" method="POST">
                 {{ csrfField() }}
-                <button type="submit" class="btn btn-sm" style="background: white; color: black; border-radius: 20px; padding: 6px 16px; font-weight: bold;">Suivre</button>
+                <button type="submit" class="btn btn-primary" style="height: 32px; font-size: 14px;">Suivre</button>
             </form>
         @endif
       </div>
     @else
       <div style="padding: 40px; text-align: center; color: var(--muted-text);">
-        Aucun compte trouvé.
+        Aucun compte trouvé pour "{{ query }}".
       </div>
     @endeach
 </div>
 
 <script>
     function showTab(tabName) {
+        // Affichage du contenu
         document.getElementById('tweets-results').style.display = tabName === 'tweets' ? 'block' : 'none';
         document.getElementById('users-results').style.display = tabName === 'users' ? 'block' : 'none';
         
-        const tabs = document.querySelectorAll('.search-tab');
-        tabs.forEach(tab => {
-            if (tab.innerText.toLowerCase().includes(tabName === 'tweets' ? 'posts' : 'comptes')) {
-                tab.classList.add('active');
-                tab.style.borderBottom = '4px solid var(--primary-color)';
-                tab.style.color = 'white';
-            } else {
-                tab.classList.remove('active');
-                tab.style.borderBottom = 'none';
-                tab.style.color = 'var(--muted-text)';
-            }
-        });
+        // Style des onglets
+        document.getElementById('tab-posts').classList.toggle('active', tabName === 'tweets');
+        document.getElementById('tab-users').classList.toggle('active', tabName === 'users');
     }
 </script>
+
 @end

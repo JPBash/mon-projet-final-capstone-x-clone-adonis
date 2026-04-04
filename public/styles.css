@@ -156,14 +156,17 @@ input[type='file'] {
   align-items: center;
   gap: 16px;
   padding: 12px;
+  margin-bottom: 8px; /* Ajout d'un petit espacement */
   border-radius: 9999px;
   font-size: 19px;
-  font-weight: 400;
-  transition: background-color 0.2s;
+  font-weight: 500;
+  color: #000000;
+  background-color: #efefef;
+  transition: all 0.2s;
 }
 
 .nav-link:hover {
-  background-color: var(--bg-hover);
+  background-color: #d8d8d8; /* Un peu plus sombre au survol */
 }
 
 .nav-link.active {
@@ -177,9 +180,7 @@ input[type='file'] {
 
 .grok-toggle {
   width: 100%;
-  background: transparent;
   border: none;
-  color: var(--main-text);
   cursor: pointer;
 }
 
@@ -216,30 +217,56 @@ input[type='file'] {
 
 .grok-result-box {
   margin-top: 12px;
-  padding: 12px;
-  border: 1px solid var(--border-color);
-  border-radius: 14px;
+  padding: 16px;
+  border: 1px solid rgba(29, 155, 240, 0.3);
+  border-radius: 16px;
   background-color: #111214;
+  box-shadow: 0 4px 12px rgba(29, 155, 240, 0.1);
+  position: relative;
+}
+
+.grok-result-box::before {
+  content: 'Grok';
+  position: absolute;
+  top: -10px;
+  right: 12px;
+  background-color: var(--twitter-blue);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.grok-result-box strong {
+  color: var(--twitter-blue);
+  display: block;
+  margin-bottom: 8px;
 }
 
 .grok-result-box p {
-  margin-top: 8px;
+  margin-top: 0;
+  line-height: 1.5;
 }
 
 .grok-tags {
-  margin-top: 8px;
-  color: var(--twitter-blue);
-  font-weight: 600;
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .grok-recommendations {
-  margin-top: 8px;
-  padding-left: 18px;
+  margin-top: 12px;
+  padding-left: 20px;
+  list-style-type: '→ ';
 }
 
 .grok-recommendations li {
-  margin-bottom: 6px;
-  color: var(--main-text);
+  margin-bottom: 8px;
+  color: var(--muted-text);
+  font-size: 14px;
 }
 
 .user-chip {

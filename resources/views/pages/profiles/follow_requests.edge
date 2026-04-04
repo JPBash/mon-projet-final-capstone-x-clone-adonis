@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Demandes d'abonnement - X</title>
+    <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+
+    <main id="app" class="app-shell">
+        <div class="layout">
+            {{-- Sidebar --}}
+            <aside class="sidebar">
+              <div class="brand">X</div>
+              <nav class="nav-menu">
+                <a href="{{ route('home') }}" class="nav-link">Accueil</a>
+                <button class="nav-link">Explorer</button>
+                <a href="{{ route('profile.show') }}" class="nav-link">Profil</a>
+              </nav>
+            </aside>
+
+            {{-- Page Demandes --}}
+            <section class="feed">
+              <header class="feed-header">
+                <a href="{{ route('profile.show') }}" style="padding: 15px; text-decoration: none; color: inherit;">←</a>
+                <h2 style="padding: 15px;">Demandes d'abonnement</h2>
+              </header>
+
+              <div class="request-list" style="padding: 16px;">
+                @if(requests.length === 0)
+                  <p class="muted" style="text-align: center; margin-top: 50px;">Vous n'avez aucune demande d'abonnement en attente.</p>
+                @else
+                  @each(request in requests)
+                    <div class="request-item" style="display: flex; align-items: center; justify-content: space-between; padding: 12px; border-bottom: 1px solid var(--border-color);">
+                      <div style="display: flex; align-items: center; gap: 12px;">
+                        <div class="avatar">
+                          @if(request.follower.avatarUrl)
+                            <img src="{{ request.follower.avatarUrl }}" alt="Avatar">
+                          @else
+                            <div class="avatar-placeholder">{{ request.follower.fullName.charAt(0) }}</div>
+                          @endif
+                        </div>
+                        <div>
+                          <strong>{{ request.follower.fullName }}</strong>
+                          <p class="muted" style="font-size: 13px;">{{ request.follower.email }}</p>
+                        </div>
+                      </div>
+                      <div style="display: flex; gap: 8px;">
+                        <form action="{{ route('profile.requests.accept', { id: request.id }) }}" method="POST">
+                          {{ csrfField() }}
+                          <button type="submit" class="btn btn-primary" style="padding: 5px 15px; font-size: 13px;">Accepter</button>
+                        </form>
+                        <form action="{{ route('profile.requests.reject', { id: request.id }) }}" method="POST">
+                          {{ csrfField() }}
+                          <button type="submit" class="btn btn-outline-danger" style="padding: 5px 15px; font-size: 13px;">Refuser</button>
+                        </form>
+                      </div>
+                    </div>
+                  @endeach
+                @endif
+              </div>
+            </section>
+
+            {{-- Panel Droit --}}
+            <aside class="right-panel">
+              <div class="card">
+                <h3>À propos des demandes</h3>
+                <p class="muted" style="font-size: 13px;">Lorsque votre compte est privé, vous devez approuver manuellement les nouveaux abonnés pour qu'ils puissent voir votre contenu.</p>
+              </div>
+            </aside>
+        </div>
+    </main>
+
+</body>
+</html>

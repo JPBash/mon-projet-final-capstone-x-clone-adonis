@@ -232,10 +232,10 @@
 
             {{-- Panel Droit --}}
             <aside class="right-panel">
-              <div class="search-box">
-                <input type="text" placeholder="Rechercher" />
-              </div>
-              <section class="card">
+       <form action="{{ route('tweets.search') }}" method="GET" class="search-box">
+        <input type="text" name="q" placeholder="Rechercher" value="{{ query || '' }}" />
+                </form>
+                <section class="card">
                 <h3>Ce qui se passe</h3>
                 <ul class="simple-list">
                   <li>#AdonisJS</li>

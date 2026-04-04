@@ -4,29 +4,58 @@ import Tweet from '#models/tweet'
 
 export default class extends BaseSeeder {
   async run() {
-    // 1. Créer un compte de test pour toi
-    const me = await User.create({
+    // 1. Créer un compte administrateur (Vérifié)
+    const admin = await User.create({
       fullName: 'Bashizi Jean-Pierre',
       email: 'admin@test.com',
       password: 'password123',
+      isEmailVerified: true,
+      bio: 'Développeur Fullstack passionné par AdonisJS.'
     })
 
-    // 2. Créer quelques utilisateurs fictifs
+    // 2. Créer un compte privé (Vérifié)
+    const privateUser = await User.create({
+      fullName: 'Elon Musk',
+      email: 'elon@x.com',
+      password: 'password123',
+      isEmailVerified: true,
+      isPrivate: true,
+      bio: 'Chief Troll Officer. Mars is the goal.'
+    })
+
+    // 3. Créer un compte non vérifié (pour tester le middleware)
+    await User.create({
+      fullName: 'Guest User',
+      email: 'guest@test.com',
+      password: 'password123',
+      isEmailVerified: false
+    })
+
+    // 4. Créer d'autres utilisateurs
     const users = await User.createMany([
-      { fullName: 'Elon Musk', email: 'elon@x.com', password: 'password123' },
-      { fullName: 'Adonis Master', email: 'dev@adonis.js', password: 'password123' },
-      { fullName: 'Kadea Student', email: 'student@kadea.cd', password: 'password123' },
+      { fullName: 'Adonis Master', email: 'dev@adonis.ts', password: 'password123', isEmailVerified: true },
+      { fullName: 'Kadea Ninja', email: 'ninja@kadea.cd', password: 'password123', isEmailVerified: true },
     ])
 
-    // 3. Ajouter des tweets réalistes
+    // 5. Ajouter des tweets
     await Tweet.createMany([
       {
-        userId: me.id,
-        content: 'Mon clone de X est enfin en ligne sur Railway ! 🚀 #AdonisJS #Kadea',
+        userId: admin.id,
+        content: 'Mon clone de X est enfin prêt ! 🚀 #AdonisJS #Kadea #WebDev',
       },
-      { userId: users[0].id, content: 'I love this new X clone. Very fast! 🚀' },
-      { userId: users[1].id, content: 'AdonisJS 6 est vraiment incroyable pour le backend.' },
-      { userId: users[2].id, content: "Est-ce que quelqu'un a vu mon dernier commit ?" },
+      { userId: privateUser.id, content: 'X is the everything app. 𝕏' },
+      { userId: users[0].id, content: 'La visibilité des tweets est maintenant gérée par le blocage et le mode privé !' },
     ])
+
+    // 6. Ajouter des follows (Acceptés)
+    await admin.related('following').create({
+        followingId: users[0].id,
+        status: 'accepted'
+    })
+
+    await users[1].related('following').create({
+        followingId: admin.id,
+        status: 'accepted'
+    })
   }
 }
