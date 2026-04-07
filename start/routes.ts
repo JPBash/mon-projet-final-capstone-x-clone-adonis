@@ -8,7 +8,7 @@ const SearchesController = () => import('#controllers/tweets/searches_controller
 const GrokController = () => import('#controllers/grok_controller')
 
 // 1. La page d'accueil (Home)
-router.get('/', [RegisterController, 'showHome']).as('home')
+router.get('/', [RegisterController, 'showHome']).as('home').use([middleware.auth(), middleware.verified()])
 
 router
   .group(() => {
@@ -53,7 +53,7 @@ router.group(() => {
     router
       .post('signup/password', [controllers.NewAccount, 'passwordStore'])
       .as('auth.create_password.store')
-}).use(middleware.auth())
+})
 
 //  Groupe pour les connectés ET vérifiés
 router
