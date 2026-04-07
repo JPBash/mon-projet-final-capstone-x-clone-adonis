@@ -13,8 +13,8 @@ export const controllers = {
   NewAccount: () => import('#controllers/new_account_controller'),
   PasswordResets: () => import('#controllers/password_resets_controller'),
   profiles: {
-    Follow: () => import('#controllers/profiles/follow_controller'),
     Blocks: () => import('#controllers/profiles/blocks_controller'),
+    Follow: () => import('#controllers/profiles/follow_controller'),
     FollowRequests: () => import('#controllers/profiles/follow_requests_controller'),
   },
   Session: () => import('#controllers/session_controller'),

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>X. C'est ici que ça se passe / X</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body style="background-color: #000; margin: 0; overflow-x: hidden;">
+  <main class="landing-page">
+    <div class="landing-logo-side">
+      <i class="fa-brands fa-x-twitter huge-x"></i>
+    </div>
+    <div class="landing-content-side">
+      <h1>Ça se passe maintenant</h1>
+      <h2>Inscrivez-vous.</h2>
+
+      <div class="landing-actions">
+        {{-- Boutons simulés (Google/Apple) --}}
+        <div class="btn-pill btn-pill-white">
+          <i class="fa-brands fa-google" style="color: #4285F4; font-size: 18px;"></i>
+          S'inscrire avec Google
+        </div>
+        <div class="btn-pill btn-pill-white">
+          <i class="fa-brands fa-apple" style="font-size: 20px;"></i>
+          S'inscrire avec Apple
+        </div>
+
+        <div class="separator">OU</div>
+
+        <a href="{{ route('auth.register.show') }}" class="btn-pill btn-pill-white" style="background-color: #1d9bf0; color: #fff; border: none;">
+          Créer un compte
+        </a>
+
+        <p class="legal-text">
+          En vous inscrivant, vous acceptez les <a href="#">Conditions d'utilisation</a> et la <a href="#">Politique de confidentialité</a>, notamment l'<a href="#">Utilisation des cookies</a>.
+        </p>
+
+        <div class="login-prompt">
+          <h3>Vous avez déjà un compte ?</h3>
+          <a href="{{ route('auth.login.show') }}" class="btn-pill btn-pill-dark">
+            Se connecter
+          </a>
+          <a href="{{ route('grok.analyze') }}" class="btn-pill btn-pill-dark" style="margin-top: 12px;">
+            <i class="fa-solid fa-wand-magic-sparkles" style="margin-right: 8px;"></i>
+            Télécharger Grok
+          </a>
+        </div>
+      </div>
+    </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="landing-footer">
+    <a href="#">À propos</a>
+    <a href="#">Téléchargez l'application X</a>
+    <a href="#">Grok</a>
+    <a href="#">Centre d'assistance</a>
+    <a href="#">Conditions d’utilisation</a>
+    <a href="#">Politique de Confidentialité</a>
+    <a href="#">Politique relative aux cookies</a>
+    <a href="#">Accessibilité</a>
+    <a href="#">Informations sur les publicités</a>
+    <a href="#">Blog</a>
+    <a href="#">Carrières</a>
+    <a href="#">Ressources de la marque</a>
+    <a href="#">Publicité</a>
+    <a href="#">Marketing</a>
+    <a href="#">X pour les professionnels</a>
+    <a href="#">Développeurs</a>
+    <a href="#">Actualités</a>
+    <a href="#">Paramètres</a>
+    <span>© 2026 X Corp.</span>
+  </footer>
+</body>
+</html>

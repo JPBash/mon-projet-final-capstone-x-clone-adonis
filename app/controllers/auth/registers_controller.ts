@@ -11,7 +11,9 @@ export default class RegisterController {
 
   async showHome({ view, auth, request }: HttpContext) {
     const user = auth.user
-    if (!user) return view.render('pages/home', { tweets: [] })
+    if (!user) {
+      return view.render('pages/welcome')
+    }
 
     // On récupère les IDs des personnes suivies avec status 'accepted'
     const followingRow = await user.related('following').query()
