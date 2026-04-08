@@ -2,7 +2,7 @@
 
 Bienvenue sur le projet **Clone X**, une application web fullstack moderne inspirée du réseau social X (Twitter), développée avec **AdonisJS 6** et le moteur de rendu **Edge**.
 
-Ce projet a été réalisé dans le cadre de la formation **Kadea Academy** .
+Ce projet a été réalisé dans le cadre de la formation **Kadea Academy** par l'agence **NovaTech**.
 
 ##  Fonctionnalités Principales
 
@@ -31,7 +31,8 @@ Ce projet a été réalisé dans le cadre de la formation **Kadea Academy** .
 
 1. **Cloner le projet** :
    ```bash
-   git clone <url-du-repo>
+   git clone <url-du-repo> https://github.com/kadea-academy-learners/capstone-x-clone-adonis-JPBash.git
+
    cd capstone-x-clone-adonis-JPBash
    ```
 
@@ -39,7 +40,7 @@ Ce projet a été réalisé dans le cadre de la formation **Kadea Academy** .
    ```bash
    npm install
    ```
-
+ 
 3. **Configurer l'environnement** :
    Copiez le fichier `.env.example` en `.env` et configurez votre base de données PostgreSQL.
 
@@ -52,11 +53,11 @@ Ce projet a été réalisé dans le cadre de la formation **Kadea Academy** .
 5. **Lancer le serveur de développement** :
    ```bash
    npm run dev
+
    ```
-   
 6. **Lien livrable** : https://capstone-x-clone-adonis-jpbash-production.up.railway.app
 
-   
+
 ##  Identifiants de Test (Seeders)
 
 Utilisez ces comptes pour tester rapidement l'application après avoir lancé le seeder :
